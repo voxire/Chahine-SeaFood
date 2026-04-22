@@ -95,8 +95,7 @@ export function CenterTriptych({
             key={i}
             style={{ willChange: "transform, opacity" }}
             initial={v.initial}
-            whileInView={v.animate}
-            viewport={{ once: true, margin: "-20% 0px -20% 0px" }}
+            animate={v.animate}
             transition={{
               duration,
               delay: i * stagger,
