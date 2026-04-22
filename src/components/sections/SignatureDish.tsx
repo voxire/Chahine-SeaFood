@@ -1,48 +1,45 @@
 import { getTranslations } from "next-intl/server";
-import { FadeIn } from "@/components/motion/FadeIn";
-import { Parallax } from "@/components/motion/Parallax";
-import { SectionHeading } from "@/components/motion/SectionHeading";
-import { LinkButton } from "@/components/ui/Button";
 
+import { ScrollStage } from "@/components/motion/ScrollStage";
+import { Pinned } from "@/components/motion/Pinned";
+import { SignatureDishScene } from "./SignatureDishScene";
+
+/**
+ * Signature Dish — the scroll-pinned storytelling beat of the home page.
+ *
+ * The server component fetches every string up front so the initial HTML
+ * includes the heading, body, image placeholder, and three callouts. The
+ * `SignatureDishScene` client island then drives the scroll-linked
+ * reveal off the ScrollStage progress MotionValue.
+ *
+ * Runway is 180vh — tall enough for the three callouts to fan in one
+ * after another, short enough not to dominate the home page's scroll
+ * depth. Mobile keeps the same runway (the callouts reposition closer
+ * to the image) so the choreography doesn't break on narrow viewports.
+ */
 export async function SignatureDish() {
   const t = await getTranslations("signatureDish");
 
   return (
-    <section
-      aria-labelledby="signature-heading"
-      className="relative overflow-hidden py-section-y"
+    <ScrollStage
+      id="signature"
+      height="180vh"
+      className="bg-cs-bg"
     >
-      <div className="mx-auto max-w-container px-6">
-        <FadeIn>
-          <SectionHeading
-            plain={t("plain")}
-            pill={t("pill")}
-            as="h2"
-            className="[&_h2]:text-inherit"
-          />
-        </FadeIn>
-
-        {/* Hero product placeholder — will be replaced by the cutout PNG from
-            the IG pipeline output (public/signatures/fish-sandwich.png). */}
-        <div className="relative mx-auto mt-16 h-[420px] max-w-3xl md:h-[560px]">
-          <Parallax offset={48} className="absolute inset-0">
-            <div className="flex h-full items-center justify-center rounded cs-spotlight bg-cs-surface/50 backdrop-blur-sm ring-1 ring-cs-text/5">
-              <span className="px-6 text-center font-display text-sm uppercase tracking-[0.2em] text-cs-text-muted md:text-base">
-                {t("imagePlaceholder")}
-              </span>
-            </div>
-          </Parallax>
-        </div>
-
-        <FadeIn delay={0.2} className="mx-auto mt-12 max-w-xl text-center">
-          <p className="text-base text-cs-text-muted md:text-lg">
-            {t("description")}
-          </p>
-          <div className="mt-8">
-            <LinkButton href="/menu/sandwiches">{t("cta")}</LinkButton>
-          </div>
-        </FadeIn>
-      </div>
-    </section>
+      <Pinned align="top">
+        <SignatureDishScene
+          plain={t("plain")}
+          pill={t("pill")}
+          description={t("description")}
+          cta={t("cta")}
+          imagePlaceholder={t("imagePlaceholder")}
+          callouts={{
+            bread: t("callouts.bread"),
+            fish: t("callouts.fish"),
+            sauce: t("callouts.sauce"),
+          }}
+        />
+      </Pinned>
+    </ScrollStage>
   );
 }
