@@ -11,9 +11,9 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-cs-gold text-cs-bg hover:scale-[1.02] hover:bg-cs-gold-soft active:scale-[0.98]",
+    "bg-cs-gold text-cs-on-gold hover:scale-[1.02] hover:bg-cs-gold-soft active:scale-[0.98]",
   ghost:
-    "border border-cs-text/20 bg-transparent text-cs-text hover:border-cs-gold hover:text-cs-gold",
+    "border border-cs-text/20 bg-transparent text-cs-text hover:border-cs-blue hover:text-cs-blue",
 };
 
 type LinkButtonProps = {
