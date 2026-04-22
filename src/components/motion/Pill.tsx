@@ -19,42 +19,94 @@ const sizes: Record<Size, string> = {
 };
 
 /**
+ * Scripts where letters must stay in a single run so the browser can shape /
+ * join them correctly. Splitting by grapheme breaks joining (the disconnected-
+ * Arabic bug). Covers Arabic, Arabic supplements, Arabic presentation forms,
+ * Hebrew, and adjacent ranges.
+ */
+const CURSIVE_SCRIPT_RE =
+  /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u08A0-\u08FF\uFB00-\uFDFF\uFE70-\uFEFF]/;
+
+/**
  * The gold pill — our signature typographic device (the Chahine take on
- * frieslab's red pill). When children is a string and motion is allowed,
- * letters stagger in from below. Otherwise renders children as-is.
+ * frieslab's red pill). For Latin strings, letters stagger in from below.
+ * For Arabic / other cursive scripts, we stagger by *word* instead of by
+ * character so glyph joining stays intact.
  */
 export function Pill({ children, className, size = "md" }: Props) {
   const prefersReduced = useReducedMotion();
-  const shouldAnimate = !prefersReduced && typeof children === "string";
+  const isString = typeof children === "string";
+  const text = isString ? (children as string) : "";
+  const isCursive = isString && CURSIVE_SCRIPT_RE.test(text);
 
-  return (
-    <span
-      className={clsx(
-        "inline-flex items-center rounded-pill bg-cs-gold font-display font-black uppercase leading-none text-cs-on-gold",
-        "-skew-x-3",
-        sizes[size],
-        className
-      )}
-    >
-      <span className="skew-x-3">
-        {shouldAnimate
-          ? (children as string).split("").map((ch, i) => (
+  const wrapperClasses = clsx(
+    "inline-flex items-center rounded-pill bg-cs-gold font-display font-black uppercase leading-none text-cs-on-gold",
+    "-skew-x-3",
+    sizes[size],
+    className,
+  );
+
+  // Non-string children or reduced motion — render plain.
+  if (!isString || prefersReduced || text.length === 0) {
+    return (
+      <span className={wrapperClasses}>
+        <span className="skew-x-3">{children}</span>
+      </span>
+    );
+  }
+
+  // Cursive scripts: stagger by word. The whole word stays in one span so
+  // Arabic letters keep their joining behaviour.
+  if (isCursive) {
+    const parts = text.split(/(\s+)/); // keep whitespace as its own entry
+    return (
+      <span className={wrapperClasses}>
+        <span className="skew-x-3">
+          {parts.map((part, i) =>
+            /^\s+$/.test(part) ? (
+              <span key={i}>{part}</span>
+            ) : (
               <motion.span
                 key={i}
-                initial={{ y: "100%", opacity: 0 }}
+                initial={{ y: "40%", opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true, margin: "-20% 0px" }}
                 transition={{
-                  delay: i * 0.03,
-                  duration: 0.5,
+                  delay: i * 0.08,
+                  duration: 0.55,
                   ease: [0.22, 1, 0.36, 1],
                 }}
                 style={{ display: "inline-block" }}
               >
-                {ch === " " ? "\u00A0" : ch}
+                {part}
               </motion.span>
-            ))
-          : children}
+            ),
+          )}
+        </span>
+      </span>
+    );
+  }
+
+  // Latin (and other non-cursive scripts): stagger by character.
+  return (
+    <span className={wrapperClasses}>
+      <span className="skew-x-3">
+        {text.split("").map((ch, i) => (
+          <motion.span
+            key={i}
+            initial={{ y: "100%", opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-20% 0px" }}
+            transition={{
+              delay: i * 0.03,
+              duration: 0.5,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            style={{ display: "inline-block" }}
+          >
+            {ch === " " ? "\u00A0" : ch}
+          </motion.span>
+        ))}
       </span>
     </span>
   );
