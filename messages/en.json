@@ -40,19 +40,52 @@
     "plain": "THE",
     "pill": "MENU",
     "description": "Sandwiches, burgers, platters, family meals and everything you'd expect from a Lebanese fish house.",
-    "viewAllCta": "View the full menu"
+    "viewAllCta": "View the full menu",
+    "featuredKicker": "THREE TO TRY FIRST",
+    "featured": {
+      "shrimpTag": "The signature sandwich",
+      "platterTag": "Built for the table",
+      "burgerTag": "Fried fish, stacked"
+    },
+    "categoriesKicker": "EVERY CATEGORY"
   },
   "branchesTeaser": {
     "plain": "TEN BRANCHES",
     "pill": "ONE FAMILY",
     "description": "From Tripoli to Saida, there is almost certainly a Chahine Seafood closer to you than you think.",
-    "cta": "Find your nearest branch"
+    "cta": "Find your nearest branch",
+    "nearest": "Nearest to you",
+    "locating": "Finding your nearest branch…",
+    "mapDisclaimer": "Stylised silhouette, not to scale"
   },
   "story": {
     "plain": "OUR",
     "pill": "STORY",
     "body": "We started small, in 1978, with a fisherman's ambition and a few good recipes from a Lebanese grandmother. Four decades and ten branches later, the fish is still picked in the morning and the bread is still toasted by hand. Nothing about that part will change.",
-    "cta": "Read the full story"
+    "cta": "Read the full story",
+    "chapters": {
+      "est": "Est. 1978",
+      "daily": "Caught this morning",
+      "reach": "Ten branches, one family"
+    }
+  },
+  "community": {
+    "plain": "JOIN THE",
+    "pill": "TABLE",
+    "description": "More than sixty-eight thousand regulars follow the daily catch, the giveaways, and the late-night sandwich runs on Instagram. No customers — only the people we feed.",
+    "followerCount": "68,300+",
+    "followerLabel": "regulars on Instagram",
+    "handle": "@chahine.seafood.lb",
+    "cta": "Follow on Instagram",
+    "tilePrefix": "Post",
+    "tiles": {
+      "catch": "This morning's catch",
+      "fryer": "Straight from the fryer",
+      "family": "Built for the table",
+      "branch": "A new branch",
+      "giveaway": "Giveaway week",
+      "regulars": "Late-night regulars"
+    }
   },
   "footer": {
     "tagline": "From the heart of the sea to your heart.",
