@@ -152,6 +152,32 @@ export function branchRestaurantSchema(branch: Branch, locale: Locale) {
 }
 
 /**
+ * FAQPage entity for a single page's Q&A block. Each entry becomes a
+ * `Question` with a nested `Answer` — Google parses this for featured-
+ * snippet eligibility (§9.1 AEO). Answers must be literal, plain-text
+ * strings (no embedded HTML) for maximum parser compatibility.
+ */
+export function faqPageSchema(
+  faqs: readonly { question: string; answer: string }[],
+  pageUrl: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    mainEntity: faqs.map((f, i) => ({
+      "@type": "Question",
+      "@id": `${pageUrl}#faq-${i}`,
+      name: f.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.answer,
+      },
+    })),
+  };
+}
+
+/**
  * Per-item `MenuItem` schema. Emitted on /menu/[category]/[item]. Prices go
  * under `offers` rather than directly so consumers can read them as a proper
  * monetary offer with the right currency (LBP).
