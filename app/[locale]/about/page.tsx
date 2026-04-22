@@ -6,6 +6,7 @@ import { isLocale, type Locale } from "../../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
+import { LinkButton } from "@/components/ui/Button";
 
 type Props = {
   params: { locale: string };
@@ -29,7 +30,8 @@ export async function generateMetadata({
 
 export default async function AboutPage({ params }: Props) {
   if (!isLocale(params.locale)) notFound();
-  setRequestLocale(params.locale);
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
 
   const t = await getTranslations("aboutPage");
 
@@ -44,10 +46,60 @@ export default async function AboutPage({ params }: Props) {
           />
         </FadeIn>
 
-        <FadeIn delay={0.2} className="mt-12 space-y-6 text-base leading-relaxed text-cs-text-muted md:text-lg">
+        {/* Pull-quote tagline */}
+        <FadeIn delay={0.15}>
+          <p className="mt-12 font-display text-2xl font-black leading-tight text-cs-blue md:text-3xl">
+            {t("tagline")}
+          </p>
+        </FadeIn>
+
+        <FadeIn
+          delay={0.25}
+          className="mt-8 space-y-6 text-base leading-relaxed text-cs-text md:text-lg"
+        >
           <p>{t("paragraphs.one")}</p>
           <p>{t("paragraphs.two")}</p>
           <p>{t("paragraphs.three")}</p>
+        </FadeIn>
+
+        {/* Fact strip */}
+        <FadeIn delay={0.4} className="mt-12">
+          <div className="grid grid-cols-3 gap-2 rounded-xl border border-cs-text/10 bg-cs-surface-2 p-6 text-center">
+            <div>
+              <p className="font-display text-3xl font-black text-cs-blue md:text-4xl">
+                10
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-wider text-cs-text-muted">
+                {t("stats.branches")}
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-3xl font-black text-cs-blue md:text-4xl">
+                68K+
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-wider text-cs-text-muted">
+                {t("stats.followers")}
+              </p>
+            </div>
+            <div>
+              <p className="font-display text-3xl font-black text-cs-blue md:text-4xl">
+                12–00
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-wider text-cs-text-muted">
+                {t("stats.hours")}
+              </p>
+            </div>
+          </div>
+        </FadeIn>
+
+        <FadeIn
+          delay={0.55}
+          className="mt-12 flex flex-wrap justify-center gap-4"
+        >
+          <LinkButton href="/menu">{t("ctaMenu")}</LinkButton>
+          <LinkButton href="/branches" variant="ghost">
+            {t("ctaBranches")}
+          </LinkButton>
         </FadeIn>
       </div>
     </section>
