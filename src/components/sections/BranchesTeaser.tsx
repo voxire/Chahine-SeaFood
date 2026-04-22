@@ -1,12 +1,34 @@
 import { getTranslations } from "next-intl/server";
+
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
-import { LinkButton } from "@/components/ui/Button";
+import { StickerLink } from "@/components/ui/StickerButton";
+import { BranchesScene } from "@/components/branches/BranchesScene";
 import { branches } from "@/data/branches";
+import { Link } from "@/lib/i18n/navigation";
 
+/**
+ * Branches teaser — Lebanon silhouette with 10 gold dots, the user's
+ * nearest branch highlighted with a pulsing ring (client-side
+ * geolocation), and the 10 branch names laid out below as chip-style
+ * links into their detail pages.
+ *
+ * Rendering model:
+ *   - Server component: heading, localized branch-name dictionary, CTA.
+ *   - `<BranchesScene>` client island: geolocation + pulse + status.
+ *
+ * Privacy: no geolocation request runs unless the user lets it; no
+ * coordinates are transmitted anywhere — everything computes locally.
+ */
 export async function BranchesTeaser() {
   const t = await getTranslations("branchesTeaser");
   const tBranches = await getTranslations("branchNames");
+
+  // Build a slug→localized-name dictionary once, server-side, so the
+  // client scene doesn't need to import the i18n provider.
+  const branchNames = Object.fromEntries(
+    branches.map((b) => [b.slug, tBranches(b.slug)]),
+  );
 
   return (
     <section
@@ -23,19 +45,41 @@ export async function BranchesTeaser() {
           />
         </FadeIn>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-3">
-          {branches.map((b, i) => (
-            <FadeIn key={b.slug} delay={0.04 * i}>
-              <span className="inline-block rounded-pill border border-cs-text/20 px-4 py-2 text-sm font-medium text-cs-text-muted">
-                {tBranches(b.slug)}
-              </span>
-            </FadeIn>
-          ))}
-        </div>
+        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,_1fr)_minmax(0,_1.2fr)] lg:items-center">
+          {/* Left: silhouette + status. On mobile this stacks above. */}
+          <FadeIn className="flex justify-center">
+            <BranchesScene
+              branchNames={branchNames}
+              nearestLabel={t("nearest")}
+              locatingLabel={t("locating")}
+              mapDisclaimer={t("mapDisclaimer")}
+            />
+          </FadeIn>
 
-        <FadeIn delay={0.5} className="mt-12 flex justify-center">
-          <LinkButton href="/branches">{t("cta")}</LinkButton>
-        </FadeIn>
+          {/* Right: branch pill list. Kept simple chips so the eye
+              gets a quick scan of the ten branch names. */}
+          <FadeIn delay={0.15}>
+            <ul className="flex flex-wrap justify-center gap-3 lg:justify-start">
+              {branches.map((b) => (
+                <li key={b.slug}>
+                  <Link
+                    href={`/branches/${b.slug}`}
+                    className="inline-flex items-center rounded-pill border border-cs-text/15 bg-cs-surface px-4 py-2 text-sm font-medium text-cs-text-muted transition-colors hover:border-cs-blue/40 hover:text-cs-blue-deep"
+                    data-cursor="link"
+                  >
+                    {tBranches(b.slug)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 flex justify-center lg:justify-start">
+              <StickerLink href="/branches" variant="primary">
+                {t("cta")}
+              </StickerLink>
+            </div>
+          </FadeIn>
+        </div>
       </div>
     </section>
   );
