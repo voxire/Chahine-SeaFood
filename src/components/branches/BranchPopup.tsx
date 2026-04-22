@@ -146,18 +146,18 @@ export function BranchPopup({
         </div>
       </dl>
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-3.5 flex flex-wrap gap-1.5">
         {content.orderHref ? (
           <a
             href={content.orderHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex flex-1 items-center justify-center rounded-pill bg-cs-gold px-3.5 py-2 text-[13px] font-semibold text-cs-on-gold transition-transform hover:scale-[1.02] hover:bg-cs-gold-soft"
+            className="inline-flex h-[30px] flex-1 items-center justify-center rounded-full bg-cs-gold px-3 text-[11.5px] font-semibold leading-none tracking-wide text-cs-on-gold transition-colors hover:bg-cs-gold-soft"
           >
             {content.orderLabel}
           </a>
         ) : (
-          <span className="inline-flex flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-3.5 py-2 text-[13px] text-cs-text-muted">
+          <span className="inline-flex h-[30px] flex-1 items-center justify-center rounded-full border border-cs-text/15 px-3 text-[11.5px] font-medium leading-none tracking-wide text-cs-text-muted">
             {content.comingSoonLabel}
           </span>
         )}
@@ -165,7 +165,7 @@ export function BranchPopup({
           href={content.mapsHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-3.5 py-2 text-[13px] font-semibold text-cs-blue-deep transition-colors hover:border-cs-blue hover:text-cs-blue"
+          className="inline-flex h-[30px] flex-1 items-center justify-center rounded-full border border-cs-text/20 px-3 text-[11.5px] font-medium leading-none tracking-wide text-cs-blue-deep transition-colors hover:border-cs-blue hover:text-cs-blue"
         >
           {content.mapsLabel}
         </a>
