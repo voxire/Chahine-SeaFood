@@ -8,6 +8,7 @@ import {
   formatPhone,
 } from "@/data/branches";
 import { buildContactLink } from "@/lib/whatsapp";
+import { Link } from "@/lib/i18n/navigation";
 import type { Locale } from "../../../i18n";
 
 type Props = {
@@ -30,9 +31,12 @@ export async function BranchCard({ branch, locale }: Props) {
   return (
     <article className="flex h-full flex-col justify-between gap-6 rounded-xl border border-cs-text/10 bg-cs-surface p-6 transition-all duration-200 ease-cs hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md">
       <header className="space-y-1">
-        <h2 className="font-display text-xl font-black uppercase leading-none text-cs-blue-deep md:text-2xl">
-          {tBranches(branch.slug)}
-        </h2>
+        <Link
+          href={`/branches/${branch.slug}`}
+          className="block font-display text-xl font-black uppercase leading-none text-cs-blue-deep transition-colors hover:text-cs-blue md:text-2xl"
+        >
+          <h2>{tBranches(branch.slug)}</h2>
+        </Link>
         <p className="text-sm text-cs-text-muted">
           {branchDistrict(branch, locale)}
         </p>
