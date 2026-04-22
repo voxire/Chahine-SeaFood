@@ -23,5 +23,104 @@
     "closed": "Closed",
     "comingSoon": "Coming soon",
     "viewAll": "View all"
+  },
+  "signatureDish": {
+    "plain": "OUR",
+    "pill": "SIGNATURE",
+    "description": "A handful of fresh-caught fillet. A buttered baguette, toasted till it cracks. Lemon, tartare, a few pickles for bite. The sandwich that built this house.",
+    "cta": "See the sandwiches",
+    "imagePlaceholder": "Signature fish sandwich · cutout from IG pipeline"
+  },
+  "menuPreview": {
+    "plain": "THE",
+    "pill": "MENU",
+    "description": "Sandwiches, platters, seafood by the kilo, and everything you'd expect from a Lebanese fish house.",
+    "viewAllCta": "View the full menu"
+  },
+  "branchesTeaser": {
+    "plain": "TEN BRANCHES",
+    "pill": "ONE FAMILY",
+    "description": "From Tripoli to Saida, there is almost certainly a Chahine Seafood closer to you than you think.",
+    "cta": "Find your nearest branch"
+  },
+  "story": {
+    "plain": "OUR",
+    "pill": "STORY",
+    "body": "We started small, in 1978, with a fisherman's ambition and a few good recipes from a Lebanese grandmother. Four decades and ten branches later, the fish is still picked in the morning and the bread is still toasted by hand. Nothing about that part will change.",
+    "cta": "Read the full story"
+  },
+  "footer": {
+    "tagline": "From the heart of the sea to your heart.",
+    "copyright": "All rights reserved."
+  },
+  "categories": {
+    "sandwiches": "Sandwiches",
+    "platters": "Platters",
+    "seafood-by-weight": "By weight",
+    "sides": "Sides",
+    "drinks": "Drinks",
+    "packaged": "Packaged"
+  },
+  "branchNames": {
+    "cola": "Cola",
+    "hamra": "Hamra",
+    "dekwaneh": "Dekwaneh",
+    "dahyeh": "Dahyeh",
+    "khaldeh": "Khaldeh",
+    "saida": "Saida",
+    "alay": "Alay",
+    "kaslik": "Kaslik",
+    "byblos": "Byblos",
+    "tripoli": "Tripoli"
+  },
+  "menu": {
+    "heading": { "plain": "THE", "pill": "MENU" },
+    "subhead": "Every Chahine Seafood dish, organised into the six categories you'll recognise from any of our branches."
+  },
+  "menuCategory": {
+    "heading": { "plain": "FROM" },
+    "empty": "Items coming soon.",
+    "comingSoonNote": "The full menu for this category is being prepared. Real items, real photography, and real prices land once the content pass is done."
+  },
+  "branchesPage": {
+    "heading": { "plain": "TEN", "pill": "BRANCHES" },
+    "subhead": "Ten Chahine Seafood locations across Lebanon. Click any branch to start an order on WhatsApp.",
+    "phonePending": "Phone TBC",
+    "contactCta": "Have a general question instead?"
+  },
+  "aboutPage": {
+    "heading": { "plain": "OUR", "pill": "STORY" },
+    "paragraphs": {
+      "one": "Chahine Seafood is a Lebanese family business that has been serving the country's finest fried fish since 1978. It started as a single shop in Cola, built on two stubborn rules: use only the day's catch, and toast every baguette to order.",
+      "two": "Four decades later those rules are the same. What has changed is the reach — ten branches now stretch from Tripoli in the north to Saida in the south, and on any given day the kitchens go through a respectable fraction of what Lebanon's coast pulls in.",
+      "three": "The name on the sign is Chahine. The people behind it are a family who, still, pick the fish in the morning and serve it by the afternoon. There is no secret more complicated than that."
+    }
+  },
+  "contactPage": {
+    "heading": { "plain": "GET IN", "pill": "TOUCH" },
+    "subhead": "The fastest way to us is Instagram DM or WhatsApp to your nearest branch.",
+    "branchesCta": "See all ten branches"
+  },
+  "pages": {
+    "menu": {
+      "title": "Menu",
+      "description": "Chahine Seafood's full menu — sandwiches, platters, seafood by weight, sides, drinks, and packaged goods. Order from your nearest Lebanese branch on WhatsApp."
+    },
+    "menuCategory": {
+      "titleSuffix": "Menu",
+      "description": "Browse Chahine Seafood's {category} selection and order on WhatsApp from your nearest branch."
+    },
+    "branches": {
+      "title": "Branches",
+      "description": "Ten Chahine Seafood branches across Lebanon — Cola, Hamra, Dekwaneh, Dahyeh, Khaldeh, Saida, Alay, Kaslik, Byblos, Tripoli. Find the nearest and order on WhatsApp."
+    },
+    "about": {
+      "title": "About",
+      "description": "The Chahine Seafood story — a Lebanese family serving the freshest daily catch since 1978 across ten branches from Tripoli to Saida."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Reach Chahine Seafood on Instagram or WhatsApp your nearest branch. Lebanese seafood, served fresh since 1978."
+    }
   }
 }
