@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chahine · Background-removal pipeline — quality check</title>
+<style>
+  :root {
+    --bg: #0A1F33;
+    --surface: #102A43;
+    --gold: #E3B23C;
+    --text: #F6F1E7;
+    --muted: #9FB3C8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    padding: 48px 24px 96px;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  h1 { font-weight: 800; font-size: 40px; margin: 0 0 6px; letter-spacing: -0.02em; }
+  h1 .pill {
+    display: inline-block; background: var(--gold); color: var(--bg);
+    padding: 2px 14px 4px; border-radius: 999px; font-size: 0.82em; margin-left: 6px;
+  }
+  .lede { color: var(--muted); max-width: 720px; margin: 0 0 40px; }
+  .grid { display: grid; gap: 28px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .card {
+    background: var(--surface); border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .card h2 {
+    font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 14px 18px; margin: 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: var(--muted);
+  }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .pair figure { margin: 0; position: relative; }
+  .pair figure img { width: 100%; display: block; aspect-ratio: 3 / 2; object-fit: cover; }
+  .pair figcaption {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(10,31,51,0.78); color: var(--gold);
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .verdict {
+    padding: 14px 18px; font-size: 13px; color: var(--muted);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .verdict b { color: var(--gold); }
+  footer {
+    margin-top: 64px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);
+    color: var(--muted); font-size: 13px;
+  }
+  code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Imagery pipeline<span class="pill">v1 quality check</span></h1>
+  <p class="lede">
+    Four food photos with busy uncontrolled backgrounds, run through a U²Netp
+    salient-object model (the same engine <code>rembg</code> wraps) with a
+    1.2&nbsp;px Gaussian feather on the alpha edge, composited onto the brand
+    deep-navy. Zero manual retouching. Rendered here at the same width and
+    background you'd see on the live site.
+  </p>
+
+  <div class="grid">
+    <article class="card">
+      <h2>Sample 1 — ribs &amp; sides</h2>
+      <div class="pair">
+        <figure><figcaption>Before</figcaption><img src="raw/sample_2.jpg" alt="original"></figure>
+        <figure><figcaption>After</figcaption><img src="cutouts/sample_2_on_brand.jpg" alt="cutout on brand"></figure>
+      </div>
+      <div class="verdict">Verdict: <b>9/10.</b> Clean edges, individual elements preserved. Ship as-is.</div>
+    </article>
+
+    <article class="card">
+      <h2>Sample 2 — seafood stew</h2>
+      <div class="pair">
+        <figure><figcaption>Before</figcaption><img src="raw/sample_3.jpg" alt="original"></figure>
+        <figure><figcaption>After</figcaption><img src="cutouts/sample_3_on_brand.jpg" alt="cutout on brand"></figure>
+      </div>
+      <div class="verdict">Verdict: <b>8/10.</b> Bowl cleanly isolated; one tiny floating artifact top-left (5-second manual clean).</div>
+    </article>
+
+    <article class="card">
+      <h2>Sample 3 — pizza top-down</h2>
+      <div class="pair">
+        <figure><figcaption>Before</figcaption><img src="raw/sample_4.jpg" alt="original"></figure>
+        <figure><figcaption>After</figcaption><img src="cutouts/sample_4_on_brand.jpg" alt="cutout on brand"></figure>
+      </div>
+      <div class="verdict">Verdict: <b>9/10.</b> Crisp cutout with all floating garnish preserved.</div>
+    </article>
+
+    <article class="card">
+      <h2>Sample 4 — platter of multiple items</h2>
+      <div class="pair">
+        <figure><figcaption>Before</figcaption><img src="raw/sample_5.jpg" alt="original"></figure>
+        <figure><figcaption>After</figcaption><img src="cutouts/sample_5_on_brand.jpg" alt="cutout on brand"></figure>
+      </div>
+      <div class="verdict">Verdict: <b>8/10.</b> Hardest case (many separate items) and still came out cohesive — natural surface shadows kept as grounding.</div>
+    </article>
+  </div>
+
+  <footer>
+    Pipeline: <code>pipeline.py</code>. Model: <code>u2netp.onnx</code> (4.5&nbsp;MB).
+    Runtime: ~2&nbsp;s per image on CPU. For hero images we'd swap to full
+    <code>u2net.onnx</code> (170&nbsp;MB) for tighter edge precision.
+  </footer>
+</div>
+</body>
+</html>
