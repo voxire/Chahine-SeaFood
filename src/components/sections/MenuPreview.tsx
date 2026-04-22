@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { FadeIn } from "@/components/motion/FadeIn";
@@ -19,6 +20,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { type Locale } from "../../../i18n";
 import { categories, type CategoryKey } from "@/data/categories";
 import { findItem } from "@/data/menu";
+import { menuImage } from "@/lib/menuImage";
 
 /**
  * Menu preview — two-part section:
@@ -113,6 +115,7 @@ export async function MenuPreview() {
             const name = locale === "ar" ? item.name_ar : item.name_en;
             const description =
               locale === "ar" ? item.description_ar : item.description_en;
+            const photo = menuImage(item.category, item.slug);
             return (
               <Link
                 key={`${item.category}-${item.slug}`}
@@ -120,14 +123,27 @@ export async function MenuPreview() {
                 data-cursor="cta"
                 className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-cs-text/10 bg-cs-surface transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-lg"
               >
-                {/* Branded image slot — swaps to <Image> when real
-                    cutouts land in /public/signatures/<slug>.png. */}
-                <DishPlaceholder
-                  variant={variant}
-                  label={name}
-                  aspect="aspect-[4/3]"
-                  className="rounded-none rounded-t-lg border-0 ring-0"
-                />
+                {/* Branded image slot — renders the AI-generated editorial
+                    photo when one exists in /public/menu/, falls back to
+                    the branded silhouette placeholder otherwise. */}
+                {photo ? (
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-lg bg-cs-surface-2">
+                    <Image
+                      src={photo}
+                      alt={`${name} — ${description}`}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
+                    />
+                  </div>
+                ) : (
+                  <DishPlaceholder
+                    variant={variant}
+                    label={name}
+                    aspect="aspect-[4/3]"
+                    className="rounded-none rounded-t-lg border-0 ring-0"
+                  />
+                )}
 
                 <div className="flex flex-1 flex-col p-6 md:p-7">
                   {/* Gold tag line */}
