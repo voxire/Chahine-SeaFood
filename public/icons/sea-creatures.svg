@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" style="display:none">
+  <!--
+    Five simplified Mediterranean sea-creature silhouettes, each in its own
+    <symbol>. Rendered via <use href="/icons/sea-creatures.svg#fish-N" />.
+    Color is inherited via currentColor so consumers tint them with CSS.
+    Intended usage: ambient decoration at ~14% opacity — not anatomical art.
+  -->
+
+  <!-- fish-1: plump body, triangular tail (sea bream shape) -->
+  <symbol id="fish-1" viewBox="0 0 400 240">
+    <ellipse cx="190" cy="120" rx="135" ry="55"/>
+    <polygon points="320,120 395,70 380,120 395,170"/>
+  </symbol>
+
+  <!-- fish-2: slender body, forked tail (red mullet) -->
+  <symbol id="fish-2" viewBox="0 0 400 240">
+    <ellipse cx="180" cy="120" rx="150" ry="32"/>
+    <polygon points="320,120 395,85 370,120 395,155"/>
+  </symbol>
+
+  <!-- fish-3: compact, streamlined (sardine) -->
+  <symbol id="fish-3" viewBox="0 0 400 240">
+    <ellipse cx="200" cy="120" rx="90" ry="20"/>
+    <polygon points="280,120 340,100 328,120 340,140"/>
+  </symbol>
+
+  <!-- fish-4: octopus — round mantle + 5 tentacles -->
+  <symbol id="fish-4" viewBox="0 0 400 240">
+    <ellipse cx="200" cy="95" rx="85" ry="58"/>
+    <path d="M135 140 Q125 180 145 212 M170 150 Q160 195 180 214 M200 155 Q195 205 215 217 M230 150 Q243 198 220 215 M265 140 Q275 185 260 212"
+          stroke="currentColor" stroke-width="12" fill="none" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- fish-5: shrimp — curved body, tail fan, antennae -->
+  <symbol id="fish-5" viewBox="0 0 400 240">
+    <path d="M100 125 Q100 55 200 55 Q300 55 325 120 Q305 170 265 180 Q225 182 205 165 L240 185 L255 202 L225 195 Z"/>
+    <line x1="100" y1="125" x2="50" y2="95" stroke="currentColor" stroke-width="3"/>
+    <line x1="100" y1="125" x2="50" y2="155" stroke="currentColor" stroke-width="3"/>
+  </symbol>
+</svg>
