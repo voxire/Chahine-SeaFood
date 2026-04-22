@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type MotionProps } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { CSSProperties, ReactNode } from "react";
 
 type Direction = "left" | "right" | "top" | "bottom";
@@ -53,12 +53,12 @@ export type IngredientFlyProps = {
   style?: CSSProperties;
   children: ReactNode;
   /**
-   * If `true`, the animation fires every time the element enters the
-   * viewport. Default is `false` — matches frieslab's "once and done"
-   * feel, saves CPU on long pages.
+   * Retained for backwards compatibility with call sites that used the
+   * previous `whileInView` implementation. We now fire on mount so the
+   * flag is ignored — kept to avoid forcing a prop-removal refactor.
    */
   repeat?: boolean;
-} & Pick<MotionProps, "viewport">;
+};
 
 const DEFAULTS: Record<Direction, Offset> = {
   left: { x: "-55vw" },
@@ -92,8 +92,6 @@ export function IngredientFly({
   className,
   style,
   children,
-  repeat = false,
-  viewport,
 }: IngredientFlyProps) {
   const shouldReduce = useReducedMotion();
   const base = DEFAULTS[from];
@@ -120,13 +118,12 @@ export function IngredientFly({
         ...style,
       }}
       initial={initial}
-      whileInView={animate}
+      animate={animate}
       transition={{
         delay,
         duration,
         ease: [0.22, 1, 0.36, 1],
       }}
-      viewport={viewport ?? { once: !repeat, margin: "-15% 0px -15% 0px" }}
       aria-hidden="true"
     >
       {children}
