@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, getTranslations } from "next-intl/server";
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -44,6 +48,11 @@ type Props = {
 export default async function LocaleLayout({ children, params }: Props) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
+
+  // Opt this route into static rendering under next-intl 3.22+. Without this
+  // the tree becomes fully dynamic and the build fails to prerender pages.
+  setRequestLocale(locale);
+
   const messages = await getMessages();
   const dir = locale === "ar" ? "rtl" : "ltr";
 
