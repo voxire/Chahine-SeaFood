@@ -7,9 +7,9 @@ export async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-12 border-t border-cs-text/10 bg-cs-surface/30 py-14">
+    <footer className="mt-12 border-t border-cs-text/10 bg-cs-surface-2 py-14">
       <div className="mx-auto flex max-w-container flex-col items-center gap-6 px-6 text-center">
-        <p className="font-display text-xl font-black uppercase tracking-wide text-cs-gold">
+        <p className="font-display text-xl font-black uppercase tracking-wide text-cs-blue">
           Chahine Seafood
         </p>
 
@@ -23,25 +23,25 @@ export async function Footer() {
         >
           <Link
             href="/menu"
-            className="text-cs-text-muted transition-colors hover:text-cs-gold"
+            className="text-cs-text-muted transition-colors hover:text-cs-blue"
           >
             {nav("menu")}
           </Link>
           <Link
             href="/branches"
-            className="text-cs-text-muted transition-colors hover:text-cs-gold"
+            className="text-cs-text-muted transition-colors hover:text-cs-blue"
           >
             {nav("branches")}
           </Link>
           <Link
             href="/about"
-            className="text-cs-text-muted transition-colors hover:text-cs-gold"
+            className="text-cs-text-muted transition-colors hover:text-cs-blue"
           >
             {nav("about")}
           </Link>
           <Link
             href="/contact"
-            className="text-cs-text-muted transition-colors hover:text-cs-gold"
+            className="text-cs-text-muted transition-colors hover:text-cs-blue"
           >
             {nav("contact")}
           </Link>
