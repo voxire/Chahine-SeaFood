@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "defaultTitle": "Chahine Seafood — From the heart of the sea to your heart",
+    "defaultDescription": "Lebanon's fresh-seafood sandwich house since 1978. Ten branches, one family, one obsession with the catch of the day. Order from the nearest branch on WhatsApp."
+  },
+  "nav": {
+    "menu": "Menu",
+    "branches": "Branches",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "plain": "FROM THE",
+    "pill": "SEA",
+    "tagline": "From the heart of the sea to your heart.",
+    "subline": "Lebanon's fresh-seafood sandwich house. Ten branches, one family, one obsession with the catch of the day.",
+    "ctaMenu": "Browse the menu",
+    "ctaBranches": "Find your nearest branch"
+  },
+  "common": {
+    "orderNow": "Order on WhatsApp",
+    "openNow": "Open now",
+    "closed": "Closed",
+    "comingSoon": "Coming soon",
+    "viewAll": "View all"
+  }
+}
