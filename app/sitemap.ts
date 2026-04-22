@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { defaultLocale, locales } from "../i18n";
+import { branches } from "../src/data/branches";
 import { categories } from "../src/data/categories";
 import { menu } from "../src/data/menu";
 
@@ -55,7 +56,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly",
   }));
 
-  const allEntries = [...staticEntries, ...categoryEntries, ...itemEntries];
+  const branchEntries: StaticEntry[] = branches.map((b) => ({
+    path: `/branches/${b.slug}`,
+    priority: 0.75,
+    changeFrequency: "monthly",
+  }));
+
+  const allEntries = [
+    ...staticEntries,
+    ...categoryEntries,
+    ...itemEntries,
+    ...branchEntries,
+  ];
 
   const urls: MetadataRoute.Sitemap = [];
 
