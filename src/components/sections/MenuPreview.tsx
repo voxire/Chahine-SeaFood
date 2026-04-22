@@ -29,9 +29,9 @@ export async function MenuPreview() {
             <FadeIn key={c.slug} delay={0.08 + i * 0.05}>
               <Link
                 href={`/menu/${c.slug}`}
-                className="group block h-full rounded-lg border border-cs-text/10 bg-cs-surface/40 p-8 text-center transition-colors hover:border-cs-gold/60 hover:bg-cs-surface"
+                className="group block h-full rounded-lg border border-cs-text/10 bg-cs-surface p-8 text-center transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md"
               >
-                <span className="block font-display text-base font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-gold md:text-lg">
+                <span className="block font-display text-base font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-blue md:text-lg">
                   {tCategories(c.slug)}
                 </span>
               </Link>
