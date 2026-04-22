@@ -1,5 +1,4 @@
 import { getRequestConfig } from "next-intl/server";
-import { notFound } from "next/navigation";
 
 export const locales = ["en", "ar"] as const;
 export const defaultLocale = "en" as const;
@@ -9,9 +8,14 @@ export function isLocale(value: string | undefined): value is Locale {
   return !!value && (locales as readonly string[]).includes(value);
 }
 
-export default getRequestConfig(async ({ locale }) => {
-  if (!isLocale(locale)) notFound();
+// next-intl 3.22+ API. The layout is responsible for validating the locale
+// and calling `notFound()` — this config just hands back a valid locale +
+// messages, falling back to `defaultLocale` if the request carried garbage.
+export default getRequestConfig(async ({ requestLocale }) => {
+  const requested = await requestLocale;
+  const locale: Locale = isLocale(requested) ? requested : defaultLocale;
   return {
+    locale,
     messages: (await import(`./messages/${locale}.json`)).default,
   };
 });
