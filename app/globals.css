@@ -3,18 +3,34 @@
 @tailwind utilities;
 
 /* ---------------------------------------------------------
-   Dark palette — default. See CLAUDE.md §6.
+   Light palette — DEFAULT.
+   Colors sampled directly from the client's circular logo:
+     brand blue   #0045A2 (CHAHINE wordmark)
+     brand gold   #E5B762 (SEAFOOD text)
+     cream bg     #FDFCF8 (logo background tint)
    --------------------------------------------------------- */
 :root {
-  --cs-bg:            #0A1F33;
-  --cs-surface:       #102A43;
-  --cs-surface-2:     #17395C;
-  --cs-brand-navy:    #1E3A5F;
-  --cs-gold:          #E3B23C;
-  --cs-gold-soft:     #F5D77A;
-  --cs-text:          #F6F1E7;
-  --cs-text-muted:    #9FB3C8;
-  --cs-accent-coral:  #FF5A4E;
+  --cs-bg:            #FDFCF8;   /* warm cream (logo background) */
+  --cs-surface:       #FFFFFF;   /* pure white for elevated cards */
+  --cs-surface-2:     #F3EDDD;   /* slightly darker cream for section banding */
+
+  --cs-blue:          #0045A2;   /* primary cobalt (logo wordmark) */
+  --cs-blue-deep:     #0A2746;   /* deepest blue, used for body text */
+
+  --cs-gold:          #C99A3B;   /* AA-safe darker gold for text on cream */
+  --cs-gold-soft:     #E5B762;   /* the warm logo gold, used for fills */
+
+  --cs-text:          #0A2746;   /* deep blue body text on cream */
+  --cs-text-muted:    #556C87;   /* blue-gray for secondary copy */
+  --cs-accent-coral:  #D64937;   /* reserved for urgency */
+
+  /* Contrast-safe text color when placed on top of a gold surface.
+     Fixed across themes — deep navy reads well on both gold tones. */
+  --cs-on-gold:       #0A2746;
+
+  /* Legacy alias — older components still reference --cs-brand-navy.
+     Keep the name working so we don't churn every file in one shot. */
+  --cs-brand-navy:    var(--cs-blue);
 
   --cs-radius-sm:   6px;
   --cs-radius:     12px;
@@ -24,33 +40,39 @@
   --cs-ease-in: cubic-bezier(0.7, 0, 0.84, 0);
 }
 
-/* Light palette — honors the OS preference.
-   [data-theme="dark"] overrides the preference back to dark. */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --cs-bg:            #F6F1E7;
-    --cs-surface:       #FFFFFF;
-    --cs-surface-2:     #EFE7D4;
-    --cs-brand-navy:    #1E3A5F;
-    --cs-gold:          #B8871E;
-    --cs-gold-soft:     #D9AD4B;
-    --cs-text:          #0A1F33;
-    --cs-text-muted:    #4A6378;
-    --cs-accent-coral:  #E34130;
+/* ---------------------------------------------------------
+   Dark palette — automatic on system dark preference.
+   [data-theme="light"] forces light regardless of OS.
+   --------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --cs-bg:            #0A1F33;
+    --cs-surface:       #102A43;
+    --cs-surface-2:     #17395C;
+    --cs-blue:          #4A8CE3;   /* lightened cobalt so it reads on dark */
+    --cs-blue-deep:     #C0D6F2;   /* used where text needs high contrast */
+    --cs-gold:          #E3B23C;
+    --cs-gold-soft:     #F5D77A;
+    --cs-text:          #F6F1E7;
+    --cs-text-muted:    #9FB3C8;
+    --cs-accent-coral:  #FF5A4E;
+    --cs-brand-navy:    var(--cs-blue);
   }
 }
 
-/* Explicit light override (user-forced via the future theme toggle). */
-:root[data-theme="light"] {
-  --cs-bg:            #F6F1E7;
-  --cs-surface:       #FFFFFF;
-  --cs-surface-2:     #EFE7D4;
-  --cs-brand-navy:    #1E3A5F;
-  --cs-gold:          #B8871E;
-  --cs-gold-soft:     #D9AD4B;
-  --cs-text:          #0A1F33;
-  --cs-text-muted:    #4A6378;
-  --cs-accent-coral:  #E34130;
+/* Explicit dark override (user-forced, future theme toggle). */
+:root[data-theme="dark"] {
+  --cs-bg:            #0A1F33;
+  --cs-surface:       #102A43;
+  --cs-surface-2:     #17395C;
+  --cs-blue:          #4A8CE3;
+  --cs-blue-deep:     #C0D6F2;
+  --cs-gold:          #E3B23C;
+  --cs-gold-soft:     #F5D77A;
+  --cs-text:          #F6F1E7;
+  --cs-text-muted:    #9FB3C8;
+  --cs-accent-coral:  #FF5A4E;
+  --cs-brand-navy:    var(--cs-blue);
 }
 
 html {
@@ -71,7 +93,6 @@ html[dir="rtl"] body {
   font-family: var(--font-arabic, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Reduced-motion — global hard-off (plus per-component checks in motion primitives). */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -83,7 +104,6 @@ html[dir="rtl"] body {
   }
 }
 
-/* Focus ring uses the brand gold, not the browser default. */
 :focus-visible {
   outline: 2px solid var(--cs-gold);
   outline-offset: 3px;
@@ -108,20 +128,31 @@ html[dir="rtl"] body {
   .cs-wave-drift { animation: none; }
 }
 
-/* Soft gold spotlight used behind hero products (replaces the external spotlight PNG). */
+/* Soft gold spotlight used behind hero products. */
 .cs-spotlight {
   background: radial-gradient(
     closest-side,
-    rgba(227, 178, 60, 0.22) 0%,
-    rgba(227, 178, 60, 0) 70%
+    rgba(229, 183, 98, 0.28) 0%,
+    rgba(229, 183, 98, 0) 70%
   );
 }
 
-/* Radial vignette for the hero — replaces hero-vignette.png. */
+/* Light-mode vignette: a gentle cream fade to a subtle cream-shadow at the edges
+   (anti-vignette — keeps center bright, softens edges). */
 .cs-hero-vignette {
   background: radial-gradient(
     ellipse at center,
     transparent 0%,
-    rgba(10, 31, 51, 0.82) 78%
+    rgba(243, 237, 221, 0.65) 82%
   );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .cs-hero-vignette {
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      rgba(10, 31, 51, 0.82) 78%
+    );
+  }
 }
