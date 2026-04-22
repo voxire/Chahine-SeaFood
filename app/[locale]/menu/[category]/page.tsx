@@ -6,6 +6,7 @@ import { isLocale, type Locale, locales } from "../../../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
+import { Link } from "@/lib/i18n/navigation";
 import {
   categories,
   isCategorySlug,
@@ -80,7 +81,13 @@ export default async function CategoryPage({ params }: Props) {
           <div className="mt-16 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {items.map((item, i) => (
               <FadeIn key={item.slug} delay={0.05 + i * 0.04}>
-                <ItemCard item={item} locale={locale} />
+                <Link
+                  href={`/menu/${category}/${item.slug}`}
+                  className="block h-full"
+                  aria-label={locale === "ar" ? item.name_ar : item.name_en}
+                >
+                  <ItemCard item={item} locale={locale} />
+                </Link>
               </FadeIn>
             ))}
           </div>
