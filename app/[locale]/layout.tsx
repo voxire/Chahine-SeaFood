@@ -6,7 +6,7 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Inter } from "next/font/google";
+import { Inter, Archivo_Black, IBM_Plex_Sans_Arabic } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { locales, isLocale, type Locale } from "../../i18n";
@@ -17,6 +17,24 @@ import "../globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+// Display font — stands in for the bold, wide, geometric wordmark in the
+// Chahine logo. Used for big headings and the brand pill.
+const archivo = Archivo_Black({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+  display: "swap",
+});
+
+// Arabic body + display. Carries the hero tagline in the ar locale, so it
+// needs to look strong at large sizes and comfortable as body copy.
+const plexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "700"],
+  variable: "--font-arabic",
   display: "swap",
 });
 
@@ -57,8 +75,10 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
   const dir = locale === "ar" ? "rtl" : "ltr";
 
+  const fontVars = `${inter.variable} ${archivo.variable} ${plexArabic.variable}`;
+
   return (
-    <html lang={locale} dir={dir} className={inter.variable}>
+    <html lang={locale} dir={dir} className={fontVars}>
       <body className="min-h-screen bg-cs-bg text-cs-text antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Navbar />
