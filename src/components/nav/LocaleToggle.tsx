@@ -18,7 +18,7 @@ export function LocaleToggle() {
       onClick={() => router.replace(pathname, { locale: toggleTo })}
       className={clsx(
         "inline-flex items-center gap-2 rounded-pill border border-cs-text/20 px-3 py-1 text-sm",
-        "text-cs-text transition-colors hover:border-cs-gold hover:text-cs-gold"
+        "text-cs-text transition-colors hover:border-cs-blue hover:text-cs-blue"
       )}
       aria-label={`Switch language to ${label}`}
     >
