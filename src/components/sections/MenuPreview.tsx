@@ -24,7 +24,7 @@ export async function MenuPreview() {
           />
         </FadeIn>
 
-        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
           {categories.map((c, i) => (
             <FadeIn key={c.slug} delay={0.08 + i * 0.05}>
               <Link
