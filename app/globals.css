@@ -38,6 +38,11 @@
 
   --cs-ease:    cubic-bezier(0.22, 1, 0.36, 1);
   --cs-ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+
+  /* Height of the fixed navbar. Read by the Pinned primitive so pinned
+     scroll-stage content starts below the nav instead of sliding
+     underneath it. One source of truth — change here if the nav grows. */
+  --cs-nav-h: 72px;
 }
 
 /* ---------------------------------------------------------
@@ -78,6 +83,13 @@
 html {
   color-scheme: light dark;
   scroll-behavior: smooth;
+}
+
+/* When Lenis is driving scroll, native smooth-scroll fights its raf loop
+   on anchor jumps. The LenisProvider adds this class on the <html> element
+   while active; we disable the native easing so Lenis alone animates. */
+html.cs-lenis-on {
+  scroll-behavior: auto;
 }
 
 body {
