@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ScrollStage } from "@/components/motion/ScrollStage";
 import { Pinned } from "@/components/motion/Pinned";
+import { menuImage } from "@/lib/menuImage";
 import { SignatureDishScene } from "./SignatureDishScene";
 
 /**
@@ -33,6 +34,7 @@ export async function SignatureDish() {
           description={t("description")}
           cta={t("cta")}
           imagePlaceholder={t("imagePlaceholder")}
+          imageSrc={menuImage("sandwiches", "crispy-fillet") ?? undefined}
           callouts={{
             bread: t("callouts.bread"),
             fish: t("callouts.fish"),
