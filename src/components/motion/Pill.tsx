@@ -39,9 +39,13 @@ export function Pill({ children, className, size = "md" }: Props) {
   const text = isString ? (children as string) : "";
   const isCursive = isString && CURSIVE_SCRIPT_RE.test(text);
 
+  // The gold pill is sheared -3° in LTR to mirror frieslab's red pill.
+  // Under RTL, mirror the shear (+3°) so the slant still reads the same
+  // direction relative to reading direction — without this, the pill
+  // "leans backwards" in Arabic and the composition looks broken.
   const wrapperClasses = clsx(
     "inline-flex items-center rounded-pill bg-cs-gold font-display font-black uppercase leading-none text-cs-on-gold",
-    "-skew-x-3",
+    "-skew-x-3 rtl:skew-x-3",
     sizes[size],
     className,
   );
@@ -50,7 +54,7 @@ export function Pill({ children, className, size = "md" }: Props) {
   if (!isString || prefersReduced || text.length === 0) {
     return (
       <span className={wrapperClasses}>
-        <span className="skew-x-3">{children}</span>
+        <span className="skew-x-3 rtl:-skew-x-3">{children}</span>
       </span>
     );
   }
@@ -61,7 +65,7 @@ export function Pill({ children, className, size = "md" }: Props) {
     const parts = text.split(/(\s+)/); // keep whitespace as its own entry
     return (
       <span className={wrapperClasses}>
-        <span className="skew-x-3">
+        <span className="skew-x-3 rtl:-skew-x-3">
           {parts.map((part, i) =>
             /^\s+$/.test(part) ? (
               <span key={i}>{part}</span>
@@ -69,8 +73,7 @@ export function Pill({ children, className, size = "md" }: Props) {
               <motion.span
                 key={i}
                 initial={{ y: "40%", opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, margin: "-20% 0px" }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{
                   delay: i * 0.08,
                   duration: 0.55,
@@ -90,13 +93,12 @@ export function Pill({ children, className, size = "md" }: Props) {
   // Latin (and other non-cursive scripts): stagger by character.
   return (
     <span className={wrapperClasses}>
-      <span className="skew-x-3">
+      <span className="skew-x-3 rtl:-skew-x-3">
         {text.split("").map((ch, i) => (
           <motion.span
             key={i}
             initial={{ y: "100%", opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, margin: "-20% 0px" }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{
               delay: i * 0.03,
               duration: 0.5,
