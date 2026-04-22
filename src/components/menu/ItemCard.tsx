@@ -1,8 +1,10 @@
 import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
 import type { MenuItem } from "@/data/menu";
 import type { Locale } from "../../../i18n";
 import { formatLBP } from "@/lib/format";
+import { menuImage } from "@/lib/menuImage";
 import { buildOrderLink } from "@/lib/whatsapp";
 
 type Props = {
@@ -57,16 +59,35 @@ export function ItemCard({ item, locale, className, branch }: Props) {
 
   const orderLabel = branch && branch.phone ? ORDER_LABEL[locale] : PICK_BRANCH_LABEL[locale];
   const isExternal = orderHref.startsWith("https://");
+  const photo = menuImage(item.category, item.slug);
 
   return (
     <article
       className={clsx(
-        "group flex h-full flex-col justify-between gap-5 rounded-lg border border-cs-text/10 bg-cs-surface p-6",
+        "group flex h-full flex-col overflow-hidden rounded-lg border border-cs-text/10 bg-cs-surface",
         "transition-all duration-200 ease-cs",
         "hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md",
         className,
       )}
     >
+      {/* Dish photo — AI-generated editorial still. Lazy-loaded because
+          category listings are long (up to 9 items in sandwiches) and the
+          LCP belongs to the page heading, not the first card. Falls
+          through to no-image layout when a photo isn't wired up yet. */}
+      {photo ? (
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-cs-surface-2">
+          <Image
+            src={photo}
+            alt={`${name} — ${description}`}
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            loading="lazy"
+            className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
+          />
+        </div>
+      ) : null}
+
+      <div className="flex flex-1 flex-col gap-5 p-6">
       <header className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-display text-lg font-black uppercase leading-tight text-cs-blue-deep md:text-xl">
@@ -130,6 +151,7 @@ export function ItemCard({ item, locale, className, branch }: Props) {
           <span>{orderLabel}</span>
         </Link>
       )}
+      </div>
     </article>
   );
 }
