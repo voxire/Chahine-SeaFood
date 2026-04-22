@@ -84,6 +84,19 @@
     "subhead": "{count, plural, =0 {No items yet.} one {# item available.} other {# items available.}}",
     "empty": "Items coming soon."
   },
+  "itemDetail": {
+    "imagePlaceholder": "Photo coming soon",
+    "priceLabel": "Price",
+    "orderFromBranch": "Order from a branch",
+    "orderFromBranchHint": "Tap any branch to start your order on WhatsApp with this item pre-filled.",
+    "orderAt": "Order at",
+    "orderOnWhatsapp": "on WhatsApp",
+    "branchPhonePending": "Phone pending",
+    "backToCategory": "Back to {category}",
+    "related": {
+      "heading": "More {category}"
+    }
+  },
   "branchesPage": {
     "heading": { "plain": "TEN", "pill": "BRANCHES" },
     "subhead": "Ten Chahine Seafood locations across Lebanon. Click any branch to start an order on WhatsApp.",
