@@ -34,12 +34,13 @@ const CURSIVE_SCRIPT_RE =
 
 /**
  * Text reveal that staggers each unit in with a `y + opacity` spring.
- * Uses parent-driven variants so the whole element owns ONE intersection
- * observer regardless of unit count.
  *
- * - `mode="char"`: one unit per character (Latin only — breaks Arabic shaping).
- * - `mode="word"`: one unit per whitespace-separated word.
- * - `mode="auto"`: word for cursive scripts, char otherwise. Default.
+ * - `mode="char"` — one motion span per character, **wrapped in a per-word
+ *   nowrap group** so the browser still breaks lines only at word
+ *   boundaries. Without the wrap, chars are treated as atomic inline-block
+ *   boxes and the browser is free to break mid-word at awkward viewport widths.
+ * - `mode="word"` — one unit per whitespace-separated word.
+ * - `mode="auto"` — word for cursive scripts, char otherwise. Default.
  *
  * Respects `prefers-reduced-motion`.
  */
@@ -69,60 +70,94 @@ export function SplitText({
     return <Tag className={className}>{text}</Tag>;
   }
 
-  const units =
-    effectiveMode === "word"
-      ? text.split(/(\s+)/) // keep whitespace as its own entry
-      : Array.from(text); // graphemes-ish (Array.from handles surrogate pairs)
+  // --- Word mode: every word gets its own motion span ---
+  if (effectiveMode === "word") {
+    const motionMap = {
+      span: motion.span,
+      div: motion.div,
+      h1: motion.h1,
+      h2: motion.h2,
+      h3: motion.h3,
+      h4: motion.h4,
+      p: motion.p,
+    } as const;
+    const Outer = motionMap[as];
+    const units = text.split(/(\s+)/); // keep whitespace as its own entry
 
-  // Typed access to `motion.<tag>` — the map avoids `motion[as]` indexing
-  // which TypeScript won't narrow.
-  const motionMap = {
-    span: motion.span,
-    div: motion.div,
-    h1: motion.h1,
-    h2: motion.h2,
-    h3: motion.h3,
-    h4: motion.h4,
-    p: motion.p,
-  } as const;
-  const Outer = motionMap[as];
+    return (
+      <Outer
+        className={clsx("inline-block", className)}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-10% 0px" }}
+        transition={{ staggerChildren: stagger, delayChildren: delay }}
+      >
+        {units.map((unit, i) => {
+          if (/^\s+$/.test(unit)) return <span key={i}>{unit}</span>;
+          return (
+            <motion.span
+              key={i}
+              variants={{
+                hidden: { y, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              }}
+              transition={{ duration, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: "inline-block" }}
+            >
+              {unit}
+            </motion.span>
+          );
+        })}
+      </Outer>
+    );
+  }
+
+  // --- Char mode: chars animated individually, but grouped by word ---
+  // Each word is an `inline-block` `whitespace-nowrap` span so the browser
+  // can only wrap BETWEEN words, never between chars within a word.
+  // We use explicit per-char delay (instead of variants + staggerChildren)
+  // because the chars are grandchildren through the nowrap word wrapper,
+  // and Framer's staggerChildren only hits direct motion children.
+  const words = text.split(/(\s+)/);
+  const Tag = as as ElementType;
+  let charIndex = 0;
 
   return (
-    <Outer
-      className={clsx("inline-block", className)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{
-        staggerChildren: stagger,
-        delayChildren: delay,
-      }}
-    >
-      {units.map((unit, i) => {
-        // Preserve whitespace without animating it.
-        if (effectiveMode === "word" && /^\s+$/.test(unit)) {
-          return <span key={i}>{unit}</span>;
-        }
-        if (effectiveMode === "char" && unit === " ") {
-          return <span key={i}>{"\u00A0"}</span>;
+    <Tag className={clsx("inline-block", className)}>
+      {words.map((word, wi) => {
+        if (/^\s+$/.test(word)) {
+          return <span key={wi}>{word}</span>;
         }
         return (
-          <motion.span
-            key={i}
-            variants={{
-              hidden: { y, opacity: 0 },
-              visible: { y: 0, opacity: 1 },
+          <span
+            key={wi}
+            style={{
+              display: "inline-block",
+              whiteSpace: "nowrap",
             }}
-            transition={{
-              duration,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            style={{ display: "inline-block" }}
           >
-            {unit}
-          </motion.span>
+            {Array.from(word).map((ch) => {
+              const i = charIndex++;
+              return (
+                <motion.span
+                  key={i}
+                  initial={{ y, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, margin: "-10% 0px" }}
+                  transition={{
+                    duration,
+                    delay: delay + i * stagger,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={{ display: "inline-block" }}
+                >
+                  {ch}
+                </motion.span>
+              );
+            })}
+          </span>
         );
       })}
-    </Outer>
+    </Tag>
   );
 }
