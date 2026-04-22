@@ -14,6 +14,7 @@ import { SignatureDish } from "@/components/sections/SignatureDish";
 import { MenuPreview } from "@/components/sections/MenuPreview";
 import { BranchesTeaser } from "@/components/sections/BranchesTeaser";
 import { StoryStrip } from "@/components/sections/StoryStrip";
+import { Community } from "@/components/sections/Community";
 
 type Props = {
   params: { locale: string };
@@ -54,6 +55,7 @@ export default function HomePage({ params }: Props) {
       <MenuPreview />
       <BranchesTeaser />
       <StoryStrip />
+      <Community />
     </>
   );
 }
