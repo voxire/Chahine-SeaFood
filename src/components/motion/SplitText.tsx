@@ -88,8 +88,7 @@ export function SplitText({
       <Outer
         className={clsx("inline-block", className)}
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-10% 0px" }}
+        animate="visible"
         transition={{ staggerChildren: stagger, delayChildren: delay }}
       >
         {units.map((unit, i) => {
@@ -142,8 +141,7 @@ export function SplitText({
                 <motion.span
                   key={i}
                   initial={{ y, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: "-10% 0px" }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{
                     duration,
                     delay: delay + i * stagger,
