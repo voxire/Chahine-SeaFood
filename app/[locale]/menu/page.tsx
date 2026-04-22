@@ -50,7 +50,7 @@ export default async function MenuPage({ params }: Props) {
 
         <FadeIn
           delay={0.2}
-          className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-3"
+          className="mt-16 grid grid-cols-2 gap-4 md:grid-cols-4"
         >
           {categories.map((c) => (
             <Link
