@@ -26,7 +26,7 @@ export async function SignatureDish() {
             the IG pipeline output (public/signatures/fish-sandwich.png). */}
         <div className="relative mx-auto mt-16 h-[420px] max-w-3xl md:h-[560px]">
           <Parallax offset={48} className="absolute inset-0">
-            <div className="flex h-full items-center justify-center rounded bg-cs-surface/40 backdrop-blur-sm">
+            <div className="flex h-full items-center justify-center rounded cs-spotlight bg-cs-surface/50 backdrop-blur-sm ring-1 ring-cs-text/5">
               <span className="px-6 text-center font-display text-sm uppercase tracking-[0.2em] text-cs-text-muted md:text-base">
                 {t("imagePlaceholder")}
               </span>
