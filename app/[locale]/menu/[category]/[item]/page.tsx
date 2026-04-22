@@ -4,6 +4,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { isLocale, type Locale, locales } from "../../../../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
+import { menuItemSchema } from "@/lib/seo/schemas";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { formatLBP } from "@/lib/format";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Link } from "@/lib/i18n/navigation";
@@ -86,6 +88,7 @@ export default async function ItemDetailPage({ params }: Props) {
 
   return (
     <section className="py-section-y">
+      <StructuredData data={menuItemSchema(item, locale)} />
       <div className="mx-auto max-w-container px-6">
         <FadeIn>
           <Breadcrumb
