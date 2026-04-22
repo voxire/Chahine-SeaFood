@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import Image from "next/image";
 
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
@@ -14,34 +13,22 @@ export async function Hero() {
       aria-labelledby="hero-heading"
       className="relative min-h-[calc(100vh-72px)] overflow-hidden bg-cs-bg"
     >
-      {/* Ambient wave pattern — slow drift, tinted via currentColor, disabled when
-          the user prefers reduced motion (class handled in globals.css). */}
+      {/* Ambient wave pattern — slow drift, tinted via currentColor. On light
+          theme it renders as cobalt sketch lines against cream. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 text-cs-brand-navy"
+        className="pointer-events-none absolute inset-0 text-cs-blue"
       >
-        <div className="cs-wave-drift absolute inset-0">
-          <WavePattern className="h-full w-full opacity-40" />
+        <div className="cs-wave-drift absolute inset-0 opacity-25">
+          <WavePattern className="h-full w-full" />
         </div>
       </div>
 
-      {/* Gold-dust sparkle — low opacity, sits under the vignette. */}
+      {/* Soft vignette for focus — cream at the edges on light, navy on dark. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 mix-blend-screen opacity-40"
-      >
-        <Image
-          src="/textures/gold-dust.png"
-          alt=""
-          fill
-          sizes="100vw"
-          priority
-          className="object-cover"
-        />
-      </div>
-
-      {/* Vignette for contrast — pure CSS, no external PNG required. */}
-      <div aria-hidden className="cs-hero-vignette pointer-events-none absolute inset-0" />
+        className="cs-hero-vignette pointer-events-none absolute inset-0"
+      />
 
       {/* Hero content */}
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] max-w-container flex-col items-center justify-center px-6 py-20 text-center">
@@ -52,7 +39,7 @@ export async function Hero() {
         <FadeIn delay={0.2}>
           <h1
             id="hero-heading"
-            className="mt-8 font-display text-3xl font-black uppercase leading-tight text-cs-text md:text-5xl lg:text-6xl"
+            className="mt-8 font-display text-3xl font-black uppercase leading-tight text-cs-blue-deep md:text-5xl lg:text-6xl"
           >
             {t("tagline")}
           </h1>
