@@ -165,3 +165,123 @@ html[dir="rtl"] {
     );
   }
 }
+
+/* ---------------------------------------------------------
+   Leaflet overrides — align the map chrome with the brand.
+   --------------------------------------------------------- */
+
+/* Remove Leaflet's default white background on divIcon pins so only the SVG shows. */
+.cs-branch-pin {
+  background: transparent !important;
+  border: 0 !important;
+  filter: drop-shadow(0 4px 8px rgba(10, 31, 51, 0.25));
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 8px 24px rgba(10, 31, 51, 0.18);
+  background: var(--cs-surface);
+  color: var(--cs-text);
+}
+
+.leaflet-popup-content {
+  margin: 10px 14px;
+  font-family: var(--font-sans), ui-sans-serif, sans-serif;
+  line-height: 1.45;
+}
+
+.leaflet-popup-tip {
+  background: var(--cs-surface);
+  box-shadow: 0 4px 10px rgba(10, 31, 51, 0.1);
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: var(--cs-text-muted);
+  padding: 6px 8px 0 0;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: var(--cs-blue);
+}
+
+.cs-popup-body {
+  min-width: 200px;
+}
+
+.cs-popup-name {
+  margin: 0;
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cs-blue-deep);
+}
+
+.cs-popup-district {
+  margin: 2px 0 8px;
+  font-size: 12px;
+  color: var(--cs-text-muted);
+}
+
+.cs-popup-phone {
+  margin: 0 0 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--cs-blue-deep);
+}
+
+.cs-popup-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cs-popup-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.cs-popup-cta:hover {
+  transform: translateY(-1px);
+}
+
+.cs-popup-cta--primary {
+  background: var(--cs-gold);
+  color: var(--cs-on-gold);
+}
+
+.cs-popup-cta--primary:hover {
+  background: var(--cs-gold-soft);
+}
+
+.cs-popup-cta--ghost {
+  background: transparent;
+  border: 1px solid rgba(10, 31, 51, 0.18);
+  color: var(--cs-blue-deep);
+}
+
+.cs-popup-cta--ghost:hover {
+  border-color: var(--cs-blue);
+  color: var(--cs-blue);
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.82) !important;
+  font-size: 10px !important;
+  font-family: var(--font-sans), sans-serif !important;
+  padding: 0 6px !important;
+}
+
+.leaflet-container {
+  background: var(--cs-surface-2);
+  font-family: var(--font-sans), sans-serif;
+}
