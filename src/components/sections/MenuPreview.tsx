@@ -1,18 +1,94 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+
 import { FadeIn } from "@/components/motion/FadeIn";
+import { CenterTriptych } from "@/components/motion/CenterTriptych";
 import { SectionHeading } from "@/components/motion/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
+import { DishPlaceholder, type DishVariant } from "@/components/ornaments/DishPlaceholder";
+import {
+  Sandwich,
+  Burger,
+  Platter,
+  SaladBowl,
+  Drink,
+  DipBowl,
+  FamilyMeal,
+  Fries,
+} from "@/components/ornaments/dishes";
 import { Link } from "@/lib/i18n/navigation";
-import { categories } from "@/data/categories";
+import { type Locale } from "../../../i18n";
+import { categories, type CategoryKey } from "@/data/categories";
+import { findItem } from "@/data/menu";
 
+/**
+ * Menu preview — two-part section:
+ *
+ *   1. A three-card CenterTriptych showing the signature sandwich,
+ *      the seafood platter, and the fillet burger. Each card animates
+ *      in from left / scale / right as the section enters the viewport.
+ *   2. The full 8-category grid below as the navigation handoff.
+ *
+ * Lives as a server component so the card names (pulled from `menu.ts`
+ * by locale) ship in the initial HTML for SEO + AI-engine parsing
+ * (CLAUDE.md §8.1, §9).
+ */
 export async function MenuPreview() {
   const t = await getTranslations("menuPreview");
   const tCategories = await getTranslations("categories");
+  const locale = (await getLocale()) as Locale;
+
+  // Featured trio — hand-picked as the "three to try first" trio.
+  // Each item must exist in src/data/menu.ts; if a slug is renamed
+  // there later, the render falls through gracefully (card is omitted).
+  // `variant` drives which silhouette the `<DishPlaceholder>` renders
+  // above the tag until real cutouts land in /public/signatures/.
+  const featured: {
+    item: ReturnType<typeof findItem>;
+    tag: string;
+    href: string;
+    variant: DishVariant;
+  }[] = [
+    {
+      item: findItem("sandwiches", "chahines-shrimp"),
+      tag: t("featured.shrimpTag"),
+      href: "/menu/sandwiches/chahines-shrimp",
+      variant: "sandwich",
+    },
+    {
+      item: findItem("platters", "loaded-seafood-mix"),
+      tag: t("featured.platterTag"),
+      href: "/menu/platters/loaded-seafood-mix",
+      variant: "platter",
+    },
+    {
+      item: findItem("burgers", "crispy-fillet-burger"),
+      tag: t("featured.burgerTag"),
+      href: "/menu/burgers/crispy-fillet-burger",
+      variant: "burger",
+    },
+  ];
+  const resolvedFeatured = featured.filter(
+    (f): f is typeof f & { item: NonNullable<typeof f.item> } => Boolean(f.item),
+  );
+
+  // Category-tile glyph map. Each category gets a small line-art SVG
+  // above the category name so "Sandwiches" and "Beverages" read
+  // visually distinct at a glance.
+  const CATEGORY_GLYPH: Record<CategoryKey, (p: { className?: string }) => JSX.Element> = {
+    sandwiches: Sandwich,
+    burgers: Burger,
+    platters: Platter,
+    "family-meals": FamilyMeal,
+    salads: SaladBowl,
+    "add-ons": Fries,
+    dips: DipBowl,
+    beverages: Drink,
+  };
 
   return (
     <section
       aria-labelledby="menu-preview-heading"
-      className="py-section-y"
+      className="bg-cs-bg py-section-y"
     >
       <div className="mx-auto max-w-container px-6">
         <FadeIn>
@@ -24,22 +100,97 @@ export async function MenuPreview() {
           />
         </FadeIn>
 
-        <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
-          {categories.map((c, i) => (
-            <FadeIn key={c.slug} delay={0.08 + i * 0.05}>
+        {/* Featured kicker */}
+        <FadeIn delay={0.15} className="mt-14 text-center">
+          <span className="block font-display text-xs uppercase tracking-[0.3em] text-cs-gold">
+            {t("featuredKicker")}
+          </span>
+        </FadeIn>
+
+        {/* Triptych — animates left / center / right on enter. */}
+        <CenterTriptych className="mt-8" travel="64px" gap="1.5rem">
+          {resolvedFeatured.map(({ item, tag, href, variant }) => {
+            const name = locale === "ar" ? item.name_ar : item.name_en;
+            const description =
+              locale === "ar" ? item.description_ar : item.description_en;
+            return (
               <Link
-                href={`/menu/${c.slug}`}
-                className="group block h-full rounded-lg border border-cs-text/10 bg-cs-surface p-8 text-center transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md"
+                key={`${item.category}-${item.slug}`}
+                href={href}
+                data-cursor="cta"
+                className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-cs-text/10 bg-cs-surface transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-lg"
               >
-                <span className="block font-display text-base font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-blue md:text-lg">
-                  {tCategories(c.slug)}
-                </span>
+                {/* Branded image slot — swaps to <Image> when real
+                    cutouts land in /public/signatures/<slug>.png. */}
+                <DishPlaceholder
+                  variant={variant}
+                  label={name}
+                  aspect="aspect-[4/3]"
+                  className="rounded-none rounded-t-lg border-0 ring-0"
+                />
+
+                <div className="flex flex-1 flex-col p-6 md:p-7">
+                  {/* Gold tag line */}
+                  <span className="block font-display text-[10px] uppercase tracking-[0.25em] text-cs-gold">
+                    {tag}
+                  </span>
+                  {/* Dish name */}
+                  <h3 className="mt-3 font-display text-xl font-black uppercase leading-tight text-cs-blue-deep transition-colors group-hover:text-cs-blue md:text-2xl">
+                    {name}
+                  </h3>
+                  {/* Ingredient strip */}
+                  <p className="mt-3 text-sm leading-relaxed text-cs-text-muted md:text-base">
+                    {description}
+                  </p>
+                  {/* Arrow affordance — picks up `dir` automatically */}
+                  <span
+                    aria-hidden
+                    className="mt-5 inline-flex items-center gap-1 font-display text-xs uppercase tracking-[0.2em] text-cs-blue transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
+                  >
+                    →
+                  </span>
+                </div>
               </Link>
-            </FadeIn>
-          ))}
+            );
+          })}
+        </CenterTriptych>
+
+        {/* Category grid kicker */}
+        <FadeIn delay={0.35} className="mt-20 text-center">
+          <span className="block font-display text-xs uppercase tracking-[0.3em] text-cs-gold">
+            {t("categoriesKicker")}
+          </span>
+        </FadeIn>
+
+        {/* The full category grid stays — navigation layer beneath the
+            featured-trio hero. Each tile now carries an SVG glyph so
+            "Sandwiches" and "Beverages" read visually distinct at a
+            glance, not just as identical text tiles. */}
+        <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {categories.map((c, i) => {
+            const Glyph = CATEGORY_GLYPH[c.slug];
+            return (
+              <FadeIn key={c.slug} delay={0.08 + i * 0.05}>
+                <Link
+                  href={`/menu/${c.slug}`}
+                  className="group flex h-full flex-col items-center justify-center gap-4 rounded-lg border border-cs-text/10 bg-cs-surface px-6 py-8 text-center transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md"
+                >
+                  <span
+                    aria-hidden
+                    className="flex h-16 w-20 items-center justify-center text-cs-blue-deep transition-colors group-hover:text-cs-blue"
+                  >
+                    <Glyph className="h-full w-full" />
+                  </span>
+                  <span className="block font-display text-base font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-blue md:text-lg">
+                    {tCategories(c.slug)}
+                  </span>
+                </Link>
+              </FadeIn>
+            );
+          })}
         </div>
 
-        <FadeIn delay={0.45} className="mt-12 flex justify-center">
+        <FadeIn delay={0.5} className="mt-12 flex justify-center">
           <LinkButton href="/menu" variant="ghost">
             {t("viewAllCta")}
           </LinkButton>
