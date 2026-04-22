@@ -11,7 +11,7 @@ export async function BranchesTeaser() {
   return (
     <section
       aria-labelledby="branches-teaser-heading"
-      className="bg-cs-surface/30 py-section-y"
+      className="bg-cs-surface-2 py-section-y"
     >
       <div className="mx-auto max-w-container px-6">
         <FadeIn>
