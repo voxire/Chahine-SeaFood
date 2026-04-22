@@ -4,6 +4,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { isLocale, type Locale } from "../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
+import {
+  organizationSchema,
+  restaurantChainSchema,
+} from "@/lib/seo/schemas";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { Hero } from "@/components/sections/Hero";
 import { SignatureDish } from "@/components/sections/SignatureDish";
 import { MenuPreview } from "@/components/sections/MenuPreview";
@@ -27,19 +32,23 @@ export async function generateMetadata({
     description: t("description"),
     path: "/",
     locale: params.locale as Locale,
-    // Home title already contains "Chahine Seafood" — opt out of the template
-    // from the locale layout to avoid "… · Chahine Seafood · Chahine Seafood".
     titleAbsolute: true,
   });
 }
 
 export default function HomePage({ params }: Props) {
   if (!isLocale(params.locale)) notFound();
-  // Required for static rendering under next-intl 3.22+.
-  setRequestLocale(params.locale);
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
 
   return (
     <>
+      {/* Schema.org JSON-LD: the brand Organization + the Restaurant chain
+          with all ten branches nested as `department`. */}
+      <StructuredData
+        data={[organizationSchema(locale), restaurantChainSchema(locale)]}
+      />
+
       <Hero />
       <SignatureDish />
       <MenuPreview />
