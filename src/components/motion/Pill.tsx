@@ -30,7 +30,7 @@ export function Pill({ children, className, size = "md" }: Props) {
   return (
     <span
       className={clsx(
-        "inline-flex items-center rounded-pill bg-cs-gold font-display font-black uppercase leading-none text-cs-bg",
+        "inline-flex items-center rounded-pill bg-cs-gold font-display font-black uppercase leading-none text-cs-on-gold",
         "-skew-x-3",
         sizes[size],
         className
