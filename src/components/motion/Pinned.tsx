@@ -34,16 +34,25 @@ const JUSTIFY: Record<Align, CSSProperties["justifyContent"]> = {
 };
 
 /**
- * The fixed-viewport child of a `<ScrollStage>`. Renders a
- * `position: fixed; inset: 0;` flexbox column pinned to the viewport
- * while the surrounding `<ScrollStage>` runway scrolls past.
+ * The pinned child of a `<ScrollStage>`. Renders a
+ * `position: sticky; top: var(--cs-nav-h); height: calc(100vh - var(--cs-nav-h));`
+ * flexbox column that sticks below the fixed navbar while the surrounding
+ * `<ScrollStage>` runway scrolls past, then releases when the runway ends.
  *
- * Use inside `<ScrollStage>` only. Any `<Pinned>` rendered outside a
- * stage still works — it just stays glued to the viewport as normal
- * fixed content, which is occasionally useful (e.g. standalone heroes).
+ * Sticky (not fixed) is the correct pinned-runway contract — it scopes
+ * the pin to the parent's scroll window, so the content only appears
+ * while its `<ScrollStage>` is actually in view. Using `fixed` here
+ * would glue the content to the viewport globally and bleed over every
+ * other section of the page.
  *
- * Children can read scroll progress via `useStageProgress()` and drive
- * their own enter animations with `useTransform()`.
+ * The `top` offset reads `--cs-nav-h` (72px by default, declared in
+ * globals.css) so pinned content never slides under the fixed navbar
+ * — it stops flush beneath it. `height: calc(100vh - var(--cs-nav-h))`
+ * keeps the flex column exactly the visible area below the nav.
+ *
+ * Use inside `<ScrollStage>` only. Children can read scroll progress
+ * via `useStageProgress()` and drive their own enter animations with
+ * `useTransform()`.
  */
 export function Pinned({
   align = "center",
@@ -55,19 +64,18 @@ export function Pinned({
     <div
       data-scroll-stage-pinned
       className={clsx(
-        "pointer-events-none flex flex-col items-center",
+        "flex w-full flex-col items-center overflow-hidden",
         className,
       )}
       style={{
-        position: "fixed",
-        inset: 0,
+        position: "sticky",
+        top: "var(--cs-nav-h, 72px)",
+        height: "calc(100vh - var(--cs-nav-h, 72px))",
         justifyContent: JUSTIFY[align],
         ...style,
       }}
     >
-      {/* Inner wrapper restores pointer events for interactive content
-          while the fixed outer stays transparent to clicks on the runway. */}
-      <div className="pointer-events-auto contents">{children}</div>
+      {children}
     </div>
   );
 }
