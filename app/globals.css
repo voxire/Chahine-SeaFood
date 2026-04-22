@@ -92,3 +92,36 @@ html[dir="rtl"] body {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Ambient drift for the hero wave pattern. Slow, near-imperceptible. */
+@keyframes cs-wave-drift {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-2%, 0, 0); }
+}
+
+.cs-wave-drift {
+  animation: cs-wave-drift 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-wave-drift { animation: none; }
+}
+
+/* Soft gold spotlight used behind hero products (replaces the external spotlight PNG). */
+.cs-spotlight {
+  background: radial-gradient(
+    closest-side,
+    rgba(227, 178, 60, 0.22) 0%,
+    rgba(227, 178, 60, 0) 70%
+  );
+}
+
+/* Radial vignette for the hero — replaces hero-vignette.png. */
+.cs-hero-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(10, 31, 51, 0.82) 78%
+  );
+}
