@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
@@ -12,9 +13,20 @@ export async function Navbar() {
         <div className="mx-auto flex h-full max-w-container items-center justify-between px-6">
           <Link
             href="/"
-            className="font-display text-lg font-black uppercase tracking-wide text-cs-blue"
+            aria-label="Chahine Seafood — home"
+            className="flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-cs-gold"
           >
-            Chahine Seafood
+            <Image
+              src="/brand/logo.jpg"
+              alt=""
+              width={48}
+              height={48}
+              priority
+              className="h-12 w-12 rounded-full object-cover"
+            />
+            <span className="hidden font-display text-base font-black uppercase tracking-wide text-cs-blue sm:inline">
+              Chahine Seafood
+            </span>
           </Link>
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
             <Link
