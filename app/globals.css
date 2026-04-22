@@ -128,9 +128,11 @@ html[dir="rtl"] body {
   .cs-wave-drift { animation: none; }
 }
 
-/* Soft gold spotlight used behind hero products. */
+/* Soft gold spotlight used behind hero products. Using `background-image`
+   rather than the `background` shorthand so this class layers cleanly on top
+   of any Tailwind `bg-cs-*` color utility without wiping it out. */
 .cs-spotlight {
-  background: radial-gradient(
+  background-image: radial-gradient(
     closest-side,
     rgba(229, 183, 98, 0.28) 0%,
     rgba(229, 183, 98, 0) 70%
@@ -140,7 +142,7 @@ html[dir="rtl"] body {
 /* Light-mode vignette: a gentle cream fade to a subtle cream-shadow at the edges
    (anti-vignette — keeps center bright, softens edges). */
 .cs-hero-vignette {
-  background: radial-gradient(
+  background-image: radial-gradient(
     ellipse at center,
     transparent 0%,
     rgba(243, 237, 221, 0.65) 82%
@@ -149,7 +151,7 @@ html[dir="rtl"] body {
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .cs-hero-vignette {
-    background: radial-gradient(
+    background-image: radial-gradient(
       ellipse at center,
       transparent 0%,
       rgba(10, 31, 51, 0.82) 78%
