@@ -55,11 +55,13 @@
   },
   "categories": {
     "sandwiches": "Sandwiches",
+    "burgers": "Burgers",
     "platters": "Platters",
-    "seafood-by-weight": "By weight",
-    "sides": "Sides",
-    "drinks": "Drinks",
-    "packaged": "Packaged"
+    "family-meals": "Family Meals",
+    "salads": "Salads",
+    "add-ons": "Add-Ons",
+    "dips": "Dips",
+    "beverages": "Beverages"
   },
   "branchNames": {
     "cola": "Cola",
@@ -75,12 +77,12 @@
   },
   "menu": {
     "heading": { "plain": "THE", "pill": "MENU" },
-    "subhead": "Every Chahine Seafood dish, organised into the six categories you'll recognise from any of our branches."
+    "subhead": "Every Chahine Seafood dish, organised into the categories you'll recognise from any of our branches."
   },
   "menuCategory": {
     "heading": { "plain": "FROM" },
-    "empty": "Items coming soon.",
-    "comingSoonNote": "The full menu for this category is being prepared. Real items, real photography, and real prices land once the content pass is done."
+    "subhead": "{count, plural, =0 {No items yet.} one {# item available.} other {# items available.}}",
+    "empty": "Items coming soon."
   },
   "branchesPage": {
     "heading": { "plain": "TEN", "pill": "BRANCHES" },
