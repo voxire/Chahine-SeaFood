@@ -108,15 +108,19 @@ export function LebanonMap({
         ))}
       </g>
 
-      {/* Landmass — cream fill with navy coast stroke. */}
+      {/* Landmass — warm banded fill with navy coast stroke. We use
+          --cs-surface-2 (#F3EDDD) over --cs-bg (#FDFCF8) so the silhouette
+          actually reads. The stroke is thickened to 2.25 for a crisp
+          coastline edge, then the whole shape is opaque (1.0) to keep the
+          contrast AA-safe against the page background. */}
       <g aria-hidden>
         <path
           d={LEBANON_PATH}
-          fill="var(--cs-surface)"
+          fill="var(--cs-surface-2)"
           stroke="var(--cs-blue-deep)"
-          strokeWidth={1.5}
+          strokeWidth={2.25}
           strokeLinejoin="round"
-          opacity={0.95}
+          opacity={1}
         />
         {/* Inner mountain-range hint — a faint ridge following the coast
             spine of Lebanon (the Mount Lebanon range parallels the coast
@@ -212,12 +216,16 @@ function renderPin(branch: Branch, state: PinState) {
         />
       )}
 
-      {/* Dot itself — gold on cream with deep-navy outline for contrast. */}
+      {/* Dot itself — gold on cream with deep-navy outline for contrast.
+          We use the darker --cs-gold for the fill and a 1.75px navy stroke
+          so every pin remains AA-legible against the cream silhouette.
+          The highlighted branch is distinguished by the pulsing ring and
+          larger radius, not by fill colour alone. */}
       <circle
         r={r}
-        fill={highlight ? "var(--cs-gold)" : "var(--cs-gold-soft)"}
+        fill="var(--cs-gold)"
         stroke="var(--cs-blue-deep)"
-        strokeWidth={1}
+        strokeWidth={1.75}
       />
     </g>
   );
