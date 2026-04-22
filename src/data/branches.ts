@@ -4,6 +4,13 @@
 // branches. Tripoli is ACTIVE per the IG bio; its phone number was not on
 // the linktree and remains to be confirmed by the client (§20 Q#3).
 //
+// KNOWN PENDING ITEMS (track under CLAUDE.md §20):
+//   - Cola & Hamra share phone 96178905282 on the linktree. Likely a shared
+//     central-Beirut WhatsApp line, but needs client confirmation — treat
+//     both as routing to the same WA inbox for now.
+//   - Tripoli phone empty; UI must gracefully omit the Order button until
+//     the client confirms it.
+//
 // Opening hours are chain-wide: 12:00–00:00 every day of the week, confirmed
 // via each branch's WtsMenu ordering page (2026-04-22 research pass).
 
@@ -50,6 +57,54 @@ export const OPENING_HOURS = {
   openLocal: "12:00",
   closeLocal: "00:00",
 };
+
+/**
+ * Per-branch operational facts used to power the /branches/[slug] facts
+ * grid + FAQ block, and to feed LocalBusiness structured data. Values are
+ * reasonable-assumption placeholders per CLAUDE.md §18 — flagged for
+ * client confirmation under §20. Swap literal strings for CMS-backed
+ * content once we sign the deal.
+ */
+export type BranchFacts = {
+  /** Is dine-in available at this branch? */
+  dineIn: boolean;
+  /** Does this branch offer delivery via partner apps? */
+  delivery: boolean;
+  /** Does this branch have parking (street/lot/valet)? */
+  parking: "street" | "lot" | "valet" | "none";
+  /** Two or three signature-dish keys (align with menu slugs where possible). */
+  signatures: readonly string[];
+};
+
+const DEFAULT_FACTS: BranchFacts = {
+  dineIn: true,
+  delivery: true,
+  parking: "street",
+  signatures: ["fried-fish-sandwich", "mixed-seafood-platter"],
+};
+
+/**
+ * Overrides for branches where the default isn't quite right. Anything
+ * not listed falls back to `DEFAULT_FACTS`. Placeholder assumptions per
+ * §18 — to be reviewed/replaced post client-signature.
+ */
+const FACTS_BY_SLUG: Partial<Record<BranchSlug, Partial<BranchFacts>>> = {
+  cola: { parking: "lot", signatures: ["fried-fish-sandwich", "calamari-plate", "mixed-seafood-platter"] },
+  hamra: { parking: "street" },
+  dekwaneh: { parking: "lot" },
+  dahyeh: { parking: "street" },
+  khaldeh: { parking: "lot", signatures: ["grilled-sea-bass", "mixed-seafood-platter"] },
+  saida: { parking: "lot" },
+  alay: { parking: "street" },
+  kaslik: { parking: "valet", signatures: ["grilled-sea-bass", "octopus-salad"] },
+  byblos: { parking: "street" },
+  tripoli: { parking: "street", dineIn: true, delivery: false },
+};
+
+export function branchFacts(slug: BranchSlug): BranchFacts {
+  const override = FACTS_BY_SLUG[slug] ?? {};
+  return { ...DEFAULT_FACTS, ...override };
+}
 
 export const branchSlugs = branches.map((b) => b.slug);
 
