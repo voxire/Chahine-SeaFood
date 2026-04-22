@@ -3,7 +3,6 @@
 import clsx from "clsx";
 import { motion, useTransform } from "framer-motion";
 
-import { GoldText } from "@/components/motion/GoldText";
 import { useStageProgress } from "@/components/motion/useStageProgress";
 import { SectionHeading } from "@/components/motion/SectionHeading";
 import { StickerLink } from "@/components/ui/StickerButton";
@@ -130,13 +129,12 @@ export function StoryStripScene({
                   aspect=""
                   className="h-full rounded-md"
                 />
-                {/* Caption overlay — deep-blue bar at the bottom so the
-                    chapter label reads even over the spotlighted plate. */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end bg-gradient-to-t from-cs-blue-deep/85 via-cs-blue-deep/40 to-transparent p-6">
-                  <span className="font-display text-xs uppercase tracking-[0.25em] text-cs-bg md:text-sm">
-                    <GoldText as="span" className="opacity-90">
-                      ·{" "}
-                    </GoldText>
+                {/* Caption overlay — solid navy bar along the bottom so
+                    the chapter label clears WCAG AA against any dish art
+                    behind it. Cream text on deep navy = ~16:1 contrast. */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center gap-2 bg-cs-blue-deep px-5 py-3">
+                  <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-cs-gold" />
+                  <span className="font-display text-sm uppercase tracking-[0.18em] text-cs-bg md:text-base">
                     {t.caption}
                   </span>
                 </div>
