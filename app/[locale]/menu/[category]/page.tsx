@@ -11,6 +11,8 @@ import {
   isCategorySlug,
   type CategoryKey,
 } from "@/data/categories";
+import { itemsByCategory } from "@/data/menu";
+import { ItemCard } from "@/components/menu/ItemCard";
 
 type Props = {
   params: { locale: string; category: string };
@@ -48,11 +50,13 @@ export default async function CategoryPage({ params }: Props) {
   if (!isLocale(params.locale) || !isCategorySlug(params.category)) {
     notFound();
   }
-  setRequestLocale(params.locale);
+  const locale = params.locale as Locale;
+  setRequestLocale(locale);
 
   const tCategories = await getTranslations("categories");
   const t = await getTranslations("menuCategory");
   const category = params.category as CategoryKey;
+  const items = itemsByCategory(category);
 
   return (
     <section className="py-section-y">
@@ -61,16 +65,26 @@ export default async function CategoryPage({ params }: Props) {
           <SectionHeading
             plain={t("heading.plain")}
             pill={tCategories(category)}
-            subhead={t("empty")}
+            subhead={t("subhead", { count: items.length })}
             as="h1"
           />
         </FadeIn>
 
-        <FadeIn delay={0.2} className="mt-16 text-center">
-          <p className="mx-auto max-w-md text-sm text-cs-text-muted">
-            {t("comingSoonNote")}
-          </p>
-        </FadeIn>
+        {items.length === 0 ? (
+          <FadeIn delay={0.2} className="mt-16 text-center">
+            <p className="mx-auto max-w-md text-sm text-cs-text-muted">
+              {t("empty")}
+            </p>
+          </FadeIn>
+        ) : (
+          <div className="mt-16 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {items.map((item, i) => (
+              <FadeIn key={item.slug} delay={0.05 + i * 0.04}>
+                <ItemCard item={item} locale={locale} />
+              </FadeIn>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
