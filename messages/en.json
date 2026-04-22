@@ -136,9 +136,13 @@
     "branchesCta": "See the full branches page"
   },
   "pages": {
+    "home": {
+      "title": "Chahine Seafood — From the heart of the sea to your heart",
+      "description": "Lebanon's seafood sandwich house. Ten branches from Tripoli to Saida, open noon to midnight every day. Order on WhatsApp from the nearest branch."
+    },
     "menu": {
       "title": "Menu",
-      "description": "Chahine Seafood's full menu — sandwiches, burgers, platters, family meals, salads, add-ons, dips, and beverages. Order from your nearest Lebanese branch on WhatsApp."
+      "description": "Sandwiches, burgers, platters, family meals, salads, dips, and beverages. Order from your nearest Chahine Seafood branch on WhatsApp."
     },
     "menuCategory": {
       "titleSuffix": "Menu",
@@ -146,7 +150,7 @@
     },
     "branches": {
       "title": "Branches",
-      "description": "Ten Chahine Seafood branches across Lebanon — Cola, Hamra, Dekwaneh, Southern Suburb, Khaldeh, Saida, Aley, Kaslik, Byblos, Tripoli. Open every day, noon to midnight."
+      "description": "Ten Chahine Seafood branches across Lebanon, from Tripoli to Saida. Open every day, noon to midnight. Find the nearest and order on WhatsApp."
     },
     "about": {
       "title": "About",
