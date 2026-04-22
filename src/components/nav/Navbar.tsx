@@ -8,36 +8,36 @@ export async function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-30 h-[72px] border-b border-cs-text/10 bg-cs-bg/80 backdrop-blur">
+      <header className="fixed inset-x-0 top-0 z-30 h-[72px] border-b border-cs-text/10 bg-cs-bg/85 backdrop-blur">
         <div className="mx-auto flex h-full max-w-container items-center justify-between px-6">
           <Link
             href="/"
-            className="font-display text-lg font-black uppercase tracking-wide text-cs-gold"
+            className="font-display text-lg font-black uppercase tracking-wide text-cs-blue"
           >
             Chahine Seafood
           </Link>
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
             <Link
               href="/menu"
-              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-gold"
+              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-blue"
             >
               {t("menu")}
             </Link>
             <Link
               href="/branches"
-              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-gold"
+              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-blue"
             >
               {t("branches")}
             </Link>
             <Link
               href="/about"
-              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-gold"
+              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-blue"
             >
               {t("about")}
             </Link>
             <Link
               href="/contact"
-              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-gold"
+              className="text-sm font-medium text-cs-text transition-colors hover:text-cs-blue"
             >
               {t("contact")}
             </Link>
