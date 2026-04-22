@@ -57,7 +57,7 @@ export default async function BranchesPage({ params }: Props) {
           {branches.map((b) => (
             <article
               key={b.slug}
-              className="flex flex-col justify-between rounded-lg border border-cs-text/10 bg-cs-surface/40 p-6"
+              className="flex flex-col justify-between rounded-lg border border-cs-text/10 bg-cs-surface p-6"
             >
               <header>
                 <h2 className="font-display text-xl font-black uppercase leading-none text-cs-text">
