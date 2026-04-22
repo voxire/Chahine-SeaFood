@@ -35,7 +35,7 @@ export async function StoryStrip() {
             <Parallax offset={32}>
               {/* Placeholder for the environmental photo from IG — see
                   docs/02-asset-prompts.md §A4. */}
-              <div className="aspect-[4/5] w-full rounded-lg bg-cs-surface/60 backdrop-blur-sm" />
+              <div className="aspect-[4/5] w-full rounded-lg bg-cs-surface ring-1 ring-cs-text/10" />
             </Parallax>
           </FadeIn>
         </div>
