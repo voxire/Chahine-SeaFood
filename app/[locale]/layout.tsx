@@ -6,7 +6,7 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Inter, Archivo_Black, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Inter, Archivo_Black, Cairo } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { locales, isLocale, type Locale } from "../../i18n";
@@ -29,11 +29,14 @@ const archivo = Archivo_Black({
   display: "swap",
 });
 
-// Arabic body + display. Carries the hero tagline in the ar locale, so it
-// needs to look strong at large sizes and comfortable as body copy.
-const plexArabic = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "500", "700"],
+// Arabic body + display. Cairo is a bilingual (Arabic + Latin) typeface
+// designed by Mohamed Gaber — warm, connected Arabic letterforms that pair
+// cleanly with Inter. Heavy weight 900 stands in for Archivo Black on
+// Arabic display headings (Archivo Black has no Arabic subset, so without
+// this the browser falls back to disconnected system Arabic).
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "700", "900"],
   variable: "--font-arabic",
   display: "swap",
 });
@@ -75,7 +78,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
   const dir = locale === "ar" ? "rtl" : "ltr";
 
-  const fontVars = `${inter.variable} ${archivo.variable} ${plexArabic.variable}`;
+  const fontVars = `${inter.variable} ${archivo.variable} ${cairo.variable}`;
 
   return (
     <html lang={locale} dir={dir} className={fontVars}>
