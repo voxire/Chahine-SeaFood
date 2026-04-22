@@ -137,7 +137,40 @@
   },
   "branchDetail": {
     "heading": { "plain": "THE" },
-    "backToAll": "See all ten branches"
+    "backToAll": "See all ten branches",
+    "factsHeading": "What to expect at this branch",
+    "facts": {
+      "dineInLabel": "Dine-in",
+      "dineInYes": "Tables indoors",
+      "dineInNo": "Takeaway & delivery only",
+      "deliveryLabel": "Delivery",
+      "deliveryYes": "Via WhatsApp + partner apps",
+      "deliveryNo": "Takeaway only",
+      "parkingLabel": "Parking",
+      "parkingStreet": "Street parking nearby",
+      "parkingLot": "On-site parking lot",
+      "parkingValet": "Valet available",
+      "parkingNone": "No dedicated parking",
+      "signaturesLabel": "Signature dishes"
+    },
+    "faqHeading": "Frequently asked",
+    "faq": {
+      "openQ": "What are {branch}'s opening hours?",
+      "openA": "Open daily from noon until midnight, every day of the week — including public holidays.",
+      "orderQ": "How do I order from the {branch} branch?",
+      "orderA": "Tap the Order button on this page to open WhatsApp pre-filled with the {branch} branch number. A team member will confirm your order and prep time.",
+      "dineQ": "Can I dine in at {branch}?",
+      "dineAYes": "Yes — the {branch} branch has an indoor dining area. Tables are first-come, first-served.",
+      "dineANo": "The {branch} branch is takeaway and delivery only. The full menu is available on WhatsApp.",
+      "parkingQ": "Is there parking at the {branch} branch?",
+      "parkingAStreet": "There's street parking in the surrounding blocks. Evenings and weekends fill up quickly — arriving a little before 1pm or 7pm usually works best.",
+      "parkingALot": "The {branch} branch has its own on-site parking lot.",
+      "parkingAValet": "Valet parking is available at the {branch} branch.",
+      "parkingANone": "There's no dedicated parking at the {branch} branch. The nearest paid lots are a short walk away.",
+      "deliveryQ": "Does {branch} deliver?",
+      "deliveryAYes": "Yes — WhatsApp the branch directly for delivery inside the local neighbourhood, or order through the usual Lebanese delivery apps.",
+      "deliveryANo": "Not yet — the {branch} branch is pickup only for now."
+    }
   },
   "branchesPage": {
     "heading": { "plain": "TEN", "pill": "BRANCHES" },
