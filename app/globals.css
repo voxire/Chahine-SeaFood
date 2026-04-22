@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------
+   Dark palette — default. See CLAUDE.md §6.
+   --------------------------------------------------------- */
+:root {
+  --cs-bg:            #0A1F33;
+  --cs-surface:       #102A43;
+  --cs-surface-2:     #17395C;
+  --cs-brand-navy:    #1E3A5F;
+  --cs-gold:          #E3B23C;
+  --cs-gold-soft:     #F5D77A;
+  --cs-text:          #F6F1E7;
+  --cs-text-muted:    #9FB3C8;
+  --cs-accent-coral:  #FF5A4E;
+
+  --cs-radius-sm:   6px;
+  --cs-radius:     12px;
+  --cs-radius-pill: 9999px;
+
+  --cs-ease:    cubic-bezier(0.22, 1, 0.36, 1);
+  --cs-ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+/* Light palette — honors the OS preference.
+   [data-theme="dark"] overrides the preference back to dark. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --cs-bg:            #F6F1E7;
+    --cs-surface:       #FFFFFF;
+    --cs-surface-2:     #EFE7D4;
+    --cs-brand-navy:    #1E3A5F;
+    --cs-gold:          #B8871E;
+    --cs-gold-soft:     #D9AD4B;
+    --cs-text:          #0A1F33;
+    --cs-text-muted:    #4A6378;
+    --cs-accent-coral:  #E34130;
+  }
+}
+
+/* Explicit light override (user-forced via the future theme toggle). */
+:root[data-theme="light"] {
+  --cs-bg:            #F6F1E7;
+  --cs-surface:       #FFFFFF;
+  --cs-surface-2:     #EFE7D4;
+  --cs-brand-navy:    #1E3A5F;
+  --cs-gold:          #B8871E;
+  --cs-gold-soft:     #D9AD4B;
+  --cs-text:          #0A1F33;
+  --cs-text-muted:    #4A6378;
+  --cs-accent-coral:  #E34130;
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cs-bg);
+  color: var(--cs-text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-arabic, var(--font-sans)), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Reduced-motion — global hard-off (plus per-component checks in motion primitives). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus ring uses the brand gold, not the browser default. */
+:focus-visible {
+  outline: 2px solid var(--cs-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
