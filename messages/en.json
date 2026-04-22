@@ -29,7 +29,12 @@
     "pill": "SIGNATURE",
     "description": "A handful of fresh-caught fillet. A buttered baguette, toasted till it cracks. Lemon, tartare, a few pickles for bite. The sandwich that built this house.",
     "cta": "See the sandwiches",
-    "imagePlaceholder": "Signature fish sandwich · cutout from IG pipeline"
+    "imagePlaceholder": "Signature fish sandwich · cutout from IG pipeline",
+    "callouts": {
+      "bread": "Hand-toasted baguette",
+      "fish": "This-morning's catch",
+      "sauce": "House tartare, every day"
+    }
   },
   "menuPreview": {
     "plain": "THE",
@@ -97,6 +102,10 @@
       "heading": "More {category}"
     }
   },
+  "branchDetail": {
+    "heading": { "plain": "THE" },
+    "backToAll": "See all ten branches"
+  },
   "branchesPage": {
     "heading": { "plain": "TEN", "pill": "BRANCHES" },
     "subhead": "Ten Chahine Seafood locations across Lebanon, from Tripoli in the north to Saida in the south. Every branch takes orders on WhatsApp.",
@@ -151,6 +160,10 @@
     "branches": {
       "title": "Branches",
       "description": "Ten Chahine Seafood branches across Lebanon, from Tripoli to Saida. Open every day, noon to midnight. Find the nearest and order on WhatsApp."
+    },
+    "branchDetail": {
+      "title": "{branch} — Chahine Seafood",
+      "description": "Chahine Seafood in {district}. Open daily noon to midnight. Order on WhatsApp or open the branch on Google Maps."
     },
     "about": {
       "title": "About",
