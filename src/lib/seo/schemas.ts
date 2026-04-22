@@ -13,7 +13,14 @@
 // a Restaurant with its own `@id`, `geo`, `telephone`, and `openingHours`,
 // so search engines can index them as individual local businesses.
 
-import { branches, formatPhone, OPENING_HOURS } from "@/data/branches";
+import {
+  branches,
+  branchDistrict,
+  formatPhone,
+  OPENING_HOURS,
+  type Branch,
+} from "@/data/branches";
+import type { MenuItem } from "@/data/menu";
 import type { Locale } from "../../../i18n";
 
 const SITE_URL =
@@ -98,5 +105,78 @@ export function restaurantChainSchema(locale: Locale) {
     sameAs: [INSTAGRAM_URL],
     parentOrganization: { "@id": `${SITE_URL}#organization` },
     department,
+  };
+}
+
+/**
+ * Single-branch Restaurant / LocalBusiness entity. Emitted on the per-branch
+ * detail page (`/branches/[slug]`). Uses the same `@id` as the matching
+ * entry in the home-page chain graph so search engines see one entity, two
+ * places where it's declared.
+ */
+export function branchRestaurantSchema(branch: Branch, locale: Locale) {
+  const brand = locale === "ar" ? "شاهين سيفود" : "Chahine Seafood";
+  const district = branchDistrict(branch, locale);
+  const fullName = `${brand} — ${district}`;
+
+  const node: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "@id": `${SITE_URL}#branch-${branch.slug}`,
+    name: fullName,
+    url: `${SITE_URL}/${locale}/branches/${branch.slug}`,
+    image: `${SITE_URL}/brand/logo.jpg`,
+    servesCuisine: locale === "ar" ? "مأكولات بحرية" : "Seafood",
+    priceRange: "$$",
+    openingHours: OPENING_HOURS_SPEC,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: district,
+      addressCountry: "LB",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: branch.geo.lat,
+      longitude: branch.geo.lng,
+    },
+    hasMenu: `${SITE_URL}/${locale}/menu`,
+    parentOrganization: { "@id": `${SITE_URL}#organization` },
+    branchOf: { "@id": `${SITE_URL}#chain` },
+  };
+  if (branch.phone) {
+    node.telephone = `+${branch.phone.replace(/\D/g, "")}`.startsWith("+961")
+      ? `+${branch.phone.replace(/\D/g, "")}`
+      : `+961${branch.phone.replace(/\D/g, "")}`;
+  }
+  return node;
+}
+
+/**
+ * Per-item `MenuItem` schema. Emitted on /menu/[category]/[item]. Prices go
+ * under `offers` rather than directly so consumers can read them as a proper
+ * monetary offer with the right currency (LBP).
+ */
+export function menuItemSchema(item: MenuItem, locale: Locale) {
+  const name = locale === "ar" ? item.name_ar : item.name_en;
+  const description =
+    locale === "ar" ? item.description_ar : item.description_en;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "MenuItem",
+    "@id": `${SITE_URL}#menu-${item.category}-${item.slug}`,
+    name,
+    description,
+    inLanguage: locale === "ar" ? "ar-LB" : "en",
+    offers: {
+      "@type": "Offer",
+      price: item.price,
+      priceCurrency: "LBP",
+      availability: "https://schema.org/InStock",
+      url: `${SITE_URL}/${locale}/menu/${item.category}/${item.slug}`,
+    },
+    // Link the item to the parent Restaurant so the chain graph joins up.
+    menuAddOn: item.tags?.includes("signature") ? undefined : undefined,
+    isPartOf: { "@id": `${SITE_URL}#chain` },
   };
 }
