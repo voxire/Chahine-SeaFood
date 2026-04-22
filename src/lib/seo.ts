@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { locales, type Locale } from "../../i18n";
+import { defaultLocale, locales, type Locale } from "../../i18n";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://chahineseafood.com";
@@ -12,12 +12,22 @@ type PageMetaInput = {
   path: string;
   locale: Locale;
   ogImage?: string;
+  /**
+   * When true, the title is rendered verbatim and bypasses the layout's
+   * `title.template`. Use for the home page, where the title already
+   * contains "Chahine Seafood".
+   */
+  titleAbsolute?: boolean;
 };
 
 /**
- * Build a complete Metadata object with canonical URL, hreflang alternates,
- * OpenGraph, and Twitter cards. Every route's `generateMetadata()` should
- * call this — never return a partial metadata object.
+ * Build a complete Metadata object with canonical URL, hreflang alternates
+ * (including `x-default`), OpenGraph, and Twitter cards. Every route's
+ * `generateMetadata()` should call this — never return a partial metadata
+ * object.
+ *
+ * `x-default` points at the default-locale version of the same path, per
+ * Google's hreflang guidance. Unknown-locale users land on `/en/<path>`.
  */
 export function buildPageMetadata(input: PageMetaInput): Metadata {
   const url = `${SITE_URL}/${input.locale}${input.path}`;
@@ -26,12 +36,13 @@ export function buildPageMetadata(input: PageMetaInput): Metadata {
   for (const l of locales) {
     languages[l] = `${SITE_URL}/${l}${input.path}`;
   }
+  languages["x-default"] = `${SITE_URL}/${defaultLocale}${input.path}`;
 
   const ogImage = input.ogImage ?? DEFAULT_OG;
   const ogLocale = input.locale === "ar" ? "ar_LB" : "en_US";
 
   return {
-    title: input.title,
+    title: input.titleAbsolute ? { absolute: input.title } : input.title,
     description: input.description,
     alternates: {
       canonical: url,
