@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useTransform } from "framer-motion";
 
 import { useStageProgress } from "@/components/motion/useStageProgress";
@@ -19,6 +20,12 @@ export type SignatureDishSceneProps = {
   cta: string;
   /** Placeholder label overlaid on the dish image until the PNG lands. */
   imagePlaceholder: string;
+  /**
+   * Optional dish photo URL. When supplied, renders a real `<Image>`
+   * inside the scroll-linked reveal; when omitted, falls back to the
+   * branded silhouette placeholder.
+   */
+  imageSrc?: string;
   /** Localized callout labels. */
   callouts: {
     bread: string;
@@ -51,6 +58,7 @@ export function SignatureDishScene({
   description,
   cta,
   imagePlaceholder,
+  imageSrc,
   callouts,
 }: SignatureDishSceneProps) {
   const progress = useStageProgress();
@@ -96,21 +104,33 @@ export function SignatureDishScene({
 
       {/* Dish image + callouts stage */}
       <div className="relative mx-auto mt-10 h-[320px] w-full max-w-3xl md:mt-14 md:h-[440px]">
-        {/* Branded dish placeholder — swaps to an <Image> of
-            /public/signatures/fish-sandwich.png when the IG pipeline
-            cutout drops in. Until then, the Sandwich silhouette sits on
-            the plate ring + gold spotlight so the frame reads as
+        {/* Dish photo slot — renders the AI-generated editorial shot when
+            an `imageSrc` is supplied, otherwise falls back to the branded
+            silhouette placeholder so the frame always reads as
             intentional rather than missing. */}
         <motion.div
           style={{ opacity: imageOpacity, scale: imageScale }}
           className="absolute inset-0"
         >
-          <DishPlaceholder
-            variant="sandwich"
-            label={imagePlaceholder}
-            aspect=""
-            className="h-full"
-          />
+          {imageSrc ? (
+            <div className="relative h-full w-full overflow-hidden rounded-lg bg-cs-surface-2 ring-1 ring-cs-blue-deep/10">
+              <Image
+                src={imageSrc}
+                alt={imagePlaceholder}
+                fill
+                sizes="(min-width: 768px) 48rem, 100vw"
+                priority
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <DishPlaceholder
+              variant="sandwich"
+              label={imagePlaceholder}
+              aspect=""
+              className="h-full"
+            />
+          )}
         </motion.div>
 
         {/* Callout — bread (top-left) */}
