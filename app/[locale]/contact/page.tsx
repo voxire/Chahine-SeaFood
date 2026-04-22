@@ -51,7 +51,7 @@ export default async function ContactPage({ params }: Props) {
             href="https://www.instagram.com/chahine.seafood.lb/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between rounded-lg border border-cs-text/10 bg-cs-surface/40 p-6 transition-colors hover:border-cs-gold/60 hover:bg-cs-surface"
+            className="flex items-center justify-between rounded-lg border border-cs-text/10 bg-cs-surface p-6 transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md"
           >
             <div>
               <p className="font-display text-sm uppercase tracking-wider text-cs-text-muted">
@@ -61,7 +61,7 @@ export default async function ContactPage({ params }: Props) {
                 @chahine.seafood.lb
               </p>
             </div>
-            <span aria-hidden className="text-cs-gold">→</span>
+            <span aria-hidden className="text-cs-blue">→</span>
           </a>
         </FadeIn>
 
