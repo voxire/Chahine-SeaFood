@@ -12,6 +12,8 @@ import type { ReactNode } from "react";
 import { locales, isLocale, type Locale } from "../../i18n";
 import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/sections/Footer";
+import { LenisProvider } from "@/components/providers/LenisProvider";
+import { CustomCursor } from "@/components/motion/CustomCursor";
 import "../globals.css";
 
 const inter = Inter({
@@ -84,9 +86,17 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} dir={dir} className={fontVars}>
       <body className="min-h-screen bg-cs-bg text-cs-text antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <LenisProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </LenisProvider>
+          {/* Custom cursor gated on `?cursor=1` — no-op on touch devices,
+              under reduced motion, and when the flag isn't set. Lives
+              outside LenisProvider so the cursor position is never tied
+              to Lenis's smoothed scroll — the overlay always tracks the
+              real pointer. */}
+          <CustomCursor />
         </NextIntlClientProvider>
       </body>
     </html>
