@@ -79,15 +79,30 @@ export function branchMapsUrl(branch: Branch, locale: Locale): string {
 }
 
 /**
- * Format an E.164 phone (without the leading "+") for display.
- * "96178905282" → "+961 78 905 282".
+ * Format a Lebanese phone number for display.
+ *
+ *   "96178905282"  → "+961 78 905 282"   (8-digit mobile, country-prefixed)
+ *   "9613809922"   → "+961 3 809 922"    (7-digit landline, country-prefixed)
+ *   "79144002"     → "+961 79 144 002"   (8-digit mobile, no country prefix in source)
+ *   "03885022"     → "+961 3 885 022"    (7-digit with trunk-0)
+ *
+ * Strategy: strip the 961 country code (if present) and any leading 0, then
+ * split by digit count:
+ *   - 8 digits → mobile          "XX XXX XXX"
+ *   - 7 digits → landline        "X XXX XXX"
+ *   - anything else            → display as-is with +961 prefix
  */
-export function formatPhone(e164: string): string {
-  if (!e164) return "";
-  if (e164.startsWith("961")) {
-    const rest = e164.slice(3);
-    return `+961 ${rest.slice(0, 2)} ${rest.slice(2, 5)} ${rest.slice(5)}`.trim();
+export function formatPhone(raw: string): string {
+  if (!raw) return "";
+  let national = raw.replace(/\D/g, "");              // drop non-digits
+  if (national.startsWith("961")) national = national.slice(3);
+  if (national.startsWith("0")) national = national.slice(1);
+
+  if (national.length === 8) {
+    return `+961 ${national.slice(0, 2)} ${national.slice(2, 5)} ${national.slice(5)}`;
   }
-  // Numbers we have without the country-code prefix (e.g. "79144002"): render as-is with "+".
-  return `+${e164}`;
+  if (national.length === 7) {
+    return `+961 ${national.slice(0, 1)} ${national.slice(1, 4)} ${national.slice(4)}`;
+  }
+  return `+961 ${national}`;
 }
