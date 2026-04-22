@@ -4,22 +4,27 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { isLocale, type Locale, locales } from "../../../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
-import { branchRestaurantSchema } from "@/lib/seo/schemas";
+import { branchRestaurantSchema, faqPageSchema } from "@/lib/seo/schemas";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
 import { Link } from "@/lib/i18n/navigation";
 import { Breadcrumb } from "@/components/menu/Breadcrumb";
 import {
-  branches,
   branchDistrict,
+  branchFacts,
   branchMapsUrl,
+  branches,
   findBranch,
   formatPhone,
   isBranchSlug,
   OPENING_HOURS,
+  type BranchFacts,
 } from "@/data/branches";
 import { buildContactLink } from "@/lib/whatsapp";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://chahineseafood.com";
 
 type Props = {
   params: { locale: string; slug: string };
@@ -74,10 +79,55 @@ export default async function BranchDetailPage({ params }: Props) {
   const name = tBranches(branch.slug);
   const district = branchDistrict(branch, locale);
   const hasPhone = Boolean(branch.phone);
+  const facts = branchFacts(branch.slug);
+
+  const parkingLabel = resolveParkingLabel(facts.parking, (k) =>
+    t(`facts.parking${k}`),
+  );
+  const dineInLabel = facts.dineIn
+    ? t("facts.dineInYes")
+    : t("facts.dineInNo");
+  const deliveryLabel = facts.delivery
+    ? t("facts.deliveryYes")
+    : t("facts.deliveryNo");
+
+  // Build the FAQ entries once so they can populate both the visible
+  // accordion and the FAQPage JSON-LD (§9.1 AEO — same source of truth).
+  const faqEntries: { question: string; answer: string }[] = [
+    {
+      question: t("faq.openQ", { branch: name }),
+      answer: t("faq.openA"),
+    },
+    {
+      question: t("faq.orderQ", { branch: name }),
+      answer: t("faq.orderA", { branch: name }),
+    },
+    {
+      question: t("faq.dineQ", { branch: name }),
+      answer: facts.dineIn
+        ? t("faq.dineAYes", { branch: name })
+        : t("faq.dineANo", { branch: name }),
+    },
+    {
+      question: t("faq.parkingQ", { branch: name }),
+      answer: resolveParkingAnswer(facts.parking, name, (k, v) =>
+        t(`faq.parkingA${k}`, v),
+      ),
+    },
+    {
+      question: t("faq.deliveryQ", { branch: name }),
+      answer: facts.delivery
+        ? t("faq.deliveryAYes", { branch: name })
+        : t("faq.deliveryANo", { branch: name }),
+    },
+  ];
+
+  const faqPageUrl = `${SITE_URL}/${locale}/branches/${branch.slug}`;
 
   return (
     <section className="py-section-y">
       <StructuredData data={branchRestaurantSchema(branch, locale)} />
+      <StructuredData data={faqPageSchema(faqEntries, faqPageUrl)} />
 
       <div className="mx-auto max-w-3xl px-6">
         <FadeIn>
@@ -153,6 +203,52 @@ export default async function BranchDetailPage({ params }: Props) {
           </a>
         </FadeIn>
 
+        {/* Per-branch facts — literal, AEO-friendly detail for both
+            readers and LLM indexers. See CLAUDE.md §9.1. */}
+        <FadeIn delay={0.4} className="mt-14">
+          <h2 className="font-display text-xl font-black uppercase tracking-wide text-cs-blue-deep md:text-2xl">
+            {t("factsHeading")}
+          </h2>
+          <dl className="mt-6 grid gap-5 rounded-xl border border-cs-text/10 bg-cs-surface p-6 sm:grid-cols-2 sm:p-8">
+            <FactRow label={t("facts.dineInLabel")} value={dineInLabel} />
+            <FactRow label={t("facts.deliveryLabel")} value={deliveryLabel} />
+            <FactRow label={t("facts.parkingLabel")} value={parkingLabel} />
+            <FactRow
+              label={t("facts.signaturesLabel")}
+              value={facts.signatures.map(toHumanSignature).join(" · ")}
+            />
+          </dl>
+        </FadeIn>
+
+        {/* FAQ block — rendered as open <details>/<summary> so the first
+            paint already shows the answers without JS, and the same Q&A
+            content feeds the FAQPage JSON-LD above. */}
+        <FadeIn delay={0.45} className="mt-14">
+          <h2 className="font-display text-xl font-black uppercase tracking-wide text-cs-blue-deep md:text-2xl">
+            {t("faqHeading")}
+          </h2>
+          <div className="mt-6 divide-y divide-cs-text/10 rounded-xl border border-cs-text/10 bg-cs-surface">
+            {faqEntries.map((entry, i) => (
+              <details key={i} className="group px-6 py-5 sm:px-8" open={i === 0}>
+                <summary className="cursor-pointer list-none font-display text-base font-black uppercase tracking-wide text-cs-blue-deep marker:hidden md:text-lg">
+                  <span className="flex items-center justify-between gap-4">
+                    <span>{entry.question}</span>
+                    <span
+                      aria-hidden
+                      className="text-cs-blue transition-transform duration-200 ease-cs group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </span>
+                </summary>
+                <p className="mt-3 text-base leading-relaxed text-cs-text-muted">
+                  {entry.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </FadeIn>
+
         <FadeIn delay={0.5} className="mt-14 flex justify-center">
           <Link
             href="/branches"
@@ -165,4 +261,69 @@ export default async function BranchDetailPage({ params }: Props) {
       </div>
     </section>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Helpers — kept at the module bottom so the page reads top-down.
+// ---------------------------------------------------------------------------
+
+function FactRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs uppercase tracking-[0.2em] text-cs-text-muted">
+        {label}
+      </dt>
+      <dd className="mt-2 text-base leading-relaxed text-cs-blue-deep md:text-lg">
+        {value}
+      </dd>
+    </div>
+  );
+}
+
+function resolveParkingLabel(
+  parking: BranchFacts["parking"],
+  t: (key: "Street" | "Lot" | "Valet" | "None") => string,
+): string {
+  switch (parking) {
+    case "lot":
+      return t("Lot");
+    case "valet":
+      return t("Valet");
+    case "none":
+      return t("None");
+    case "street":
+    default:
+      return t("Street");
+  }
+}
+
+function resolveParkingAnswer(
+  parking: BranchFacts["parking"],
+  branch: string,
+  t: (key: "Street" | "Lot" | "Valet" | "None", values: { branch: string }) => string,
+): string {
+  switch (parking) {
+    case "lot":
+      return t("Lot", { branch });
+    case "valet":
+      return t("Valet", { branch });
+    case "none":
+      return t("None", { branch });
+    case "street":
+    default:
+      return t("Street", { branch });
+  }
+}
+
+/**
+ * Human-readable label for a signature-dish slug. Menu items are keyed
+ * by slug in the CMS; until we wire up a proper lookup against the menu
+ * collection, we split the slug on `-` and title-case it. Good enough
+ * for the pitch demo; swap for a menu-item lookup once Sanity lands.
+ */
+function toHumanSignature(slug: string): string {
+  return slug
+    .split("-")
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(" ");
 }
