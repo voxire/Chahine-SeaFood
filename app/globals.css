@@ -120,6 +120,52 @@ html[dir="rtl"] {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* When the custom cursor is active it hides the native cursor for a
+   clean brand feel. Interactive elements still change their pointer
+   state programmatically via the cursor's `data-cursor` targeting. */
+html.cs-cursor-hidden,
+html.cs-cursor-hidden * {
+  cursor: none !important;
+}
+@media (pointer: coarse) {
+  html.cs-cursor-hidden,
+  html.cs-cursor-hidden * {
+    cursor: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   Gold gradient text — used on every accented word inside
+   a section heading (the pill's colored word, hero kicker,
+   "SEAFOOD" in the logo wordmark echo, etc.). Matches the
+   gold-to-brighter-gold sweep the client's logo reads as
+   against cream.
+
+   Keeps a solid gold fallback color so older browsers that
+   don't support `background-clip: text` still read cleanly.
+   --------------------------------------------------------- */
+.cs-gold-text {
+  color: var(--cs-gold);
+  background: linear-gradient(
+    135deg,
+    var(--cs-gold-soft) 0%,
+    var(--cs-gold) 55%,
+    #A87F28 100%
+  );
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          text-fill-color: transparent;
+}
+
+@supports not (background-clip: text) {
+  .cs-gold-text {
+    background: none;
+    color: var(--cs-gold);
+    -webkit-text-fill-color: initial;
+  }
+}
+
 /* Ambient drift for the hero wave pattern. Slow, near-imperceptible. */
 @keyframes cs-wave-drift {
   0%, 100% { transform: translate3d(0, 0, 0); }
