@@ -9,9 +9,13 @@ const config: Config = {
           bg: "var(--cs-bg)",
           surface: "var(--cs-surface)",
           "surface-2": "var(--cs-surface-2)",
+          blue: "var(--cs-blue)",
+          "blue-deep": "var(--cs-blue-deep)",
+          // legacy alias — resolves to --cs-blue, keep for back-compat
           "brand-navy": "var(--cs-brand-navy)",
           gold: "var(--cs-gold)",
           "gold-soft": "var(--cs-gold-soft)",
+          "on-gold": "var(--cs-on-gold)",
           text: "var(--cs-text)",
           "text-muted": "var(--cs-text-muted)",
           "accent-coral": "var(--cs-accent-coral)",
