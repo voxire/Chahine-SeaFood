@@ -11,7 +11,6 @@ import {
   branches,
   branchDistrict,
   formatPhone,
-  OPENING_HOURS,
 } from "@/data/branches";
 import { buildContactLink } from "@/lib/whatsapp";
 
@@ -63,10 +62,7 @@ export default async function ContactPage({ params }: Props) {
               {t("hoursLabel")}
             </p>
             <p className="mt-2 font-display text-xl font-black text-cs-blue-deep md:text-2xl">
-              {t("hoursDaily", {
-                open: OPENING_HOURS.openLocal,
-                close: OPENING_HOURS.closeLocal,
-              })}
+              {t("hoursDaily")}
             </p>
           </div>
         </FadeIn>

@@ -1,10 +1,18 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { FadeIn } from "@/components/motion/FadeIn";
 import { SectionHeading } from "@/components/motion/SectionHeading";
 import { StickerLink } from "@/components/ui/StickerButton";
+import type { BranchPopupContent } from "@/components/branches/BranchPopup";
 import { BranchesScene } from "@/components/branches/BranchesScene";
-import { branches } from "@/data/branches";
+import {
+  branchDistrict,
+  branchMapsUrl,
+  branches,
+  formatPhone,
+} from "@/data/branches";
+import type { Locale } from "../../../i18n";
+import { buildContactLink } from "@/lib/whatsapp";
 import { Link } from "@/lib/i18n/navigation";
 
 /**
@@ -23,11 +31,47 @@ import { Link } from "@/lib/i18n/navigation";
 export async function BranchesTeaser() {
   const t = await getTranslations("branchesTeaser");
   const tBranches = await getTranslations("branchNames");
+  const tCommon = await getTranslations("common");
+  const tBranchesPage = await getTranslations("branchesPage");
+  const locale = (await getLocale()) as Locale;
 
   // Build a slug→localized-name dictionary once, server-side, so the
   // client scene doesn't need to import the i18n provider.
   const branchNames = Object.fromEntries(
     branches.map((b) => [b.slug, tBranches(b.slug)]),
+  );
+
+  // Pre-resolve every piece of popup content on the server so the client
+  // island receives a ready-to-render dictionary. Tripoli has no phone
+  // on record yet — gracefully degrade its Order CTA to a "coming soon"
+  // placeholder rather than an un-clickable wa.me/0 link.
+  //
+  // Popup hours line composes the "Open daily" label with the time range
+  // into a single row so the tooltip reads as a complete thought —
+  // "Open daily · 12pm – 2am" / "مفتوح يومياً · من ١٢ ظهراً حتى ٢ فجراً".
+  const hoursLine = `${tBranchesPage("hoursLabel")} · ${tBranchesPage("hoursDaily")}`;
+  const orderLabel = tCommon("orderNow");
+  const mapsLabel = tBranchesPage("openOnMap");
+  const comingSoonLabel = tCommon("comingSoon");
+  const closeLabel = t("popupClose");
+
+  const branchPopups: Record<string, BranchPopupContent> = Object.fromEntries(
+    branches.map((b) => {
+      const name = tBranches(b.slug);
+      const content: BranchPopupContent = {
+        name,
+        district: branchDistrict(b, locale),
+        hoursLine,
+        phoneLine: b.phone ? formatPhone(b.phone) : null,
+        orderHref: b.phone ? buildContactLink(b.phone) : null,
+        mapsHref: branchMapsUrl(b, locale),
+        orderLabel,
+        mapsLabel,
+        comingSoonLabel,
+        closeLabel,
+      };
+      return [b.slug, content];
+    }),
   );
 
   return (
@@ -50,6 +94,7 @@ export async function BranchesTeaser() {
           <FadeIn className="flex justify-center">
             <BranchesScene
               branchNames={branchNames}
+              branchPopups={branchPopups}
               nearestLabel={t("nearest")}
               locatingLabel={t("locating")}
               mapDisclaimer={t("mapDisclaimer")}

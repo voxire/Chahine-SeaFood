@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { branches } from "@/data/branches";
 import { haversineKm, nearestBranchSlug } from "@/lib/geo";
+import type { BranchPopupContent } from "./BranchPopup";
 import { LebanonMap } from "./LebanonMap";
 
 export type BranchesSceneProps = {
@@ -13,6 +14,12 @@ export type BranchesSceneProps = {
    * entire i18n bundle.
    */
   branchNames: Record<string, string>;
+  /**
+   * Pre-resolved popup content per branch, keyed by slug. Built on the
+   * server so translations, phone formatting, and WhatsApp / Maps URLs
+   * are all ready by the time the island hydrates.
+   */
+  branchPopups: Record<string, BranchPopupContent>;
   /** "Nearest to you" label, already localized. */
   nearestLabel: string;
   /** "Finding your nearest branch…" label while geolocation resolves. */
@@ -38,6 +45,7 @@ export type BranchesSceneProps = {
  */
 export function BranchesScene({
   branchNames,
+  branchPopups,
   nearestLabel,
   locatingLabel,
   mapDisclaimer,
@@ -114,6 +122,7 @@ export function BranchesScene({
       <div className="relative w-full max-w-[320px]">
         <LebanonMap
           branchNames={branchNames}
+          branchPopups={branchPopups}
           highlightSlug={highlightSlug}
           className="block h-auto w-full text-cs-blue-deep"
         />

@@ -14,6 +14,7 @@ import { Navbar } from "@/components/nav/Navbar";
 import { Footer } from "@/components/sections/Footer";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { CustomCursor } from "@/components/motion/CustomCursor";
+import { ShipsWheelPreloader } from "@/components/ui/ShipsWheelPreloader";
 import "../globals.css";
 
 const inter = Inter({
@@ -97,6 +98,11 @@ export default async function LocaleLayout({ children, params }: Props) {
               to Lenis's smoothed scroll — the overlay always tracks the
               real pointer. */}
           <CustomCursor />
+          {/* Ship's-wheel brand preloader — mounted at the layout level so
+              it appears on every full page load and locale switch, but NOT
+              on client-side route transitions (the layout persists across
+              them). Renders above everything else including the cursor. */}
+          <ShipsWheelPreloader />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -52,10 +52,13 @@ export const branches: readonly Branch[] = [
   { slug: "tripoli",  phone: "",            geo: { lat: 34.4367, lng: 35.8497 }, district_en: "Tripoli, North Lebanon",  district_ar: "طرابلس، شمال لبنان" },
 ] as const;
 
-/** Chain-wide opening hours: noon to midnight, every day. */
+/** Chain-wide opening hours: 12pm to 2am (next day), every day.
+ *  These are 24-hour ISO strings consumed by Schema.org LocalBusiness
+ *  structured data. User-visible copy is localized in messages/*.json
+ *  ("Open daily", "12pm – 2am" / "مفتوح يومياً", "١٢ ظهراً – ٢ فجراً"). */
 export const OPENING_HOURS = {
   openLocal: "12:00",
-  closeLocal: "00:00",
+  closeLocal: "02:00",
 };
 
 /**

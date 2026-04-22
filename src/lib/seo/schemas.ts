@@ -28,8 +28,11 @@ const SITE_URL =
 
 const INSTAGRAM_URL = "https://www.instagram.com/chahine.seafood.lb/";
 
-/** Schema.org opening-hours spec: "Mo-Su 12:00-24:00" (noon to midnight). */
-const OPENING_HOURS_SPEC = `Mo-Su ${OPENING_HOURS.openLocal}-24:00`;
+/** Schema.org opening-hours spec: "Mo-Su 12:00-02:00" (12pm to 2am next day).
+ *  Google interprets a close time earlier than the open time as rolling into
+ *  the following day, which is exactly what we want for a seafood house that
+ *  stays open past midnight. */
+const OPENING_HOURS_SPEC = `Mo-Su ${OPENING_HOURS.openLocal}-${OPENING_HOURS.closeLocal}`;
 
 export function organizationSchema(locale: Locale) {
   const name = locale === "ar" ? "شاهين سيفود" : "Chahine Seafood";

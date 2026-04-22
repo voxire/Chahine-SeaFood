@@ -18,7 +18,6 @@ import {
   findBranch,
   formatPhone,
   isBranchSlug,
-  OPENING_HOURS,
   type BranchFacts,
 } from "@/data/branches";
 import { buildContactLink } from "@/lib/whatsapp";
@@ -156,10 +155,7 @@ export default async function BranchDetailPage({ params }: Props) {
                 {tBranchesPage("hoursLabel")}
               </dt>
               <dd className="mt-2 font-display text-xl font-black text-cs-blue-deep md:text-2xl">
-                {tBranchesPage("hoursDaily", {
-                  open: OPENING_HOURS.openLocal,
-                  close: OPENING_HOURS.closeLocal,
-                })}
+                {tBranchesPage("hoursDaily")}
               </dd>
             </div>
             <div>

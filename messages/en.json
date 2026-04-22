@@ -56,7 +56,8 @@
     "cta": "Find your nearest branch",
     "nearest": "Nearest to you",
     "locating": "Finding your nearest branch…",
-    "mapDisclaimer": "Stylised silhouette, not to scale"
+    "mapDisclaimer": "Stylised silhouette, not to scale",
+    "popupClose": "Close"
   },
   "story": {
     "plain": "OUR",
@@ -156,7 +157,7 @@
     "faqHeading": "Frequently asked",
     "faq": {
       "openQ": "What are {branch}'s opening hours?",
-      "openA": "Open daily from noon until midnight, every day of the week — including public holidays.",
+      "openA": "Open daily from 12pm until 2am, every day of the week — including public holidays.",
       "orderQ": "How do I order from the {branch} branch?",
       "orderA": "Tap the Order button on this page to open WhatsApp pre-filled with the {branch} branch number. A team member will confirm your order and prep time.",
       "dineQ": "Can I dine in at {branch}?",
@@ -177,8 +178,8 @@
     "subhead": "Ten Chahine Seafood locations across Lebanon, from Tripoli in the north to Saida in the south. Every branch takes orders on WhatsApp.",
     "phoneLabel": "Phone",
     "phonePending": "Phone pending",
-    "hoursLabel": "Hours",
-    "hoursDaily": "Daily {open} – {close}",
+    "hoursLabel": "Open daily",
+    "hoursDaily": "12pm – 2am",
     "openOnMap": "Open on map",
     "contactCta": "Have a general question instead?"
   },
@@ -201,8 +202,8 @@
   "contactPage": {
     "heading": { "plain": "GET IN", "pill": "TOUCH" },
     "subhead": "Quickest routes to us: a WhatsApp to your nearest branch, or a DM on Instagram. We reply same-day.",
-    "hoursLabel": "Open every day",
-    "hoursDaily": "{open} – {close}",
+    "hoursLabel": "Open daily",
+    "hoursDaily": "12pm – 2am",
     "socialsHeading": "Online",
     "socialsHint": "For menu questions, feedback, or just saying hi — DM on Instagram works best.",
     "websiteLabel": "Website",
@@ -213,7 +214,7 @@
   "pages": {
     "home": {
       "title": "Chahine Seafood — From the heart of the sea to your heart",
-      "description": "Lebanon's seafood sandwich house. Ten branches from Tripoli to Saida, open noon to midnight every day. Order on WhatsApp from the nearest branch."
+      "description": "Lebanon's seafood sandwich house. Ten branches from Tripoli to Saida, open 12pm to 2am every day. Order on WhatsApp from the nearest branch."
     },
     "menu": {
       "title": "Menu",
@@ -225,11 +226,11 @@
     },
     "branches": {
       "title": "Branches",
-      "description": "Ten Chahine Seafood branches across Lebanon, from Tripoli to Saida. Open every day, noon to midnight. Find the nearest and order on WhatsApp."
+      "description": "Ten Chahine Seafood branches across Lebanon, from Tripoli to Saida. Open every day, 12pm to 2am. Find the nearest and order on WhatsApp."
     },
     "branchDetail": {
       "title": "{branch} — Chahine Seafood",
-      "description": "Chahine Seafood in {district}. Open daily noon to midnight. Order on WhatsApp or open the branch on Google Maps."
+      "description": "Chahine Seafood in {district}. Open daily 12pm to 2am. Order on WhatsApp or open the branch on Google Maps."
     },
     "about": {
       "title": "About",
@@ -237,7 +238,7 @@
     },
     "contact": {
       "title": "Contact",
-      "description": "Reach Chahine Seafood on Instagram or WhatsApp any of ten branches across Lebanon. Open noon to midnight, every day."
+      "description": "Reach Chahine Seafood on Instagram or WhatsApp any of ten branches across Lebanon. Open 12pm to 2am, every day."
     }
   }
 }

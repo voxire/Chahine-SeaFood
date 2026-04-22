@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 
 import type { Branch } from "@/data/branches";
 import {
-  OPENING_HOURS,
   branchDistrict,
   branchMapsUrl,
   formatPhone,
@@ -47,12 +46,7 @@ export async function BranchCard({ branch, locale }: Props) {
           <dt className="min-w-16 text-xs uppercase tracking-wider text-cs-text-muted/80">
             {t("hoursLabel")}
           </dt>
-          <dd className="text-cs-text">
-            {t("hoursDaily", {
-              open: OPENING_HOURS.openLocal,
-              close: OPENING_HOURS.closeLocal,
-            })}
-          </dd>
+          <dd className="text-cs-text">{t("hoursDaily")}</dd>
         </div>
 
         <div className="flex items-baseline gap-2">

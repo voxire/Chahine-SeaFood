@@ -83,7 +83,7 @@ export default async function AboutPage({ params }: Props) {
             </div>
             <div>
               <p className="font-display text-3xl font-black text-cs-blue md:text-4xl">
-                12–00
+                12–2
               </p>
               <p className="mt-1 text-xs uppercase tracking-wider text-cs-text-muted">
                 {t("stats.hours")}
