@@ -11,6 +11,7 @@ import type { ReactNode } from "react";
 
 import { locales, isLocale, type Locale } from "../../i18n";
 import { Navbar } from "@/components/nav/Navbar";
+import { Footer } from "@/components/sections/Footer";
 import "../globals.css";
 
 const inter = Inter({
@@ -62,6 +63,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Navbar />
           <main>{children}</main>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
