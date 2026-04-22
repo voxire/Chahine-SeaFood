@@ -56,9 +56,9 @@ export default async function MenuPage({ params }: Props) {
             <Link
               key={c.slug}
               href={`/menu/${c.slug}`}
-              className="group block rounded-lg border border-cs-text/10 bg-cs-surface/40 p-10 text-center transition-colors hover:border-cs-gold/60 hover:bg-cs-surface"
+              className="group block rounded-lg border border-cs-text/10 bg-cs-surface p-10 text-center transition-colors hover:-translate-y-0.5 hover:border-cs-blue/40 hover:shadow-md"
             >
-              <span className="block font-display text-lg font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-gold md:text-xl">
+              <span className="block font-display text-lg font-black uppercase leading-none text-cs-text transition-colors group-hover:text-cs-blue md:text-xl">
                 {tCategories(c.slug)}
               </span>
             </Link>
