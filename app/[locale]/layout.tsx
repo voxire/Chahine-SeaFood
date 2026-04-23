@@ -85,18 +85,24 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} dir={dir} className={fontVars}>
-      <body className="min-h-screen bg-cs-bg text-cs-text antialiased">
+      {/* Body is intentionally transparent so the <html> element's
+          background-color (cream by default, navy under .page-navy
+          via BackgroundShift) shows through. The previous
+          `bg-cs-bg text-cs-text` Tailwind classes were overriding
+          BackgroundShift's crossfade. */}
+      <body className="min-h-screen antialiased">
         <NextIntlClientProvider messages={messages} locale={locale}>
           <LenisProvider>
             <Navbar />
             <main>{children}</main>
             <Footer />
           </LenisProvider>
-          {/* Custom cursor gated on `?cursor=1` — no-op on touch devices,
-              under reduced motion, and when the flag isn't set. Lives
-              outside LenisProvider so the cursor position is never tied
-              to Lenis's smoothed scroll — the overlay always tracks the
-              real pointer. */}
+          {/* Custom cursor — on by default for mouse-driven desktop
+              (`(hover: hover) and (pointer: fine)`). No-op on touch
+              devices, under reduced motion, and when killed via
+              `?cursor=0`. Lives outside LenisProvider so the cursor
+              position is never tied to Lenis's smoothed scroll — the
+              overlay always tracks the real pointer. */}
           <CustomCursor />
           {/* Ship's-wheel brand preloader — mounted at the layout level so
               it appears on every full page load and locale switch, but NOT

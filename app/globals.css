@@ -83,6 +83,8 @@
 html {
   color-scheme: light dark;
   scroll-behavior: smooth;
+  background: var(--cs-bg);
+  color: var(--cs-text);
 }
 
 /* When Lenis is driving scroll, native smooth-scroll fights its raf loop
@@ -92,9 +94,56 @@ html.cs-lenis-on {
   scroll-behavior: auto;
 }
 
+/* BackgroundShift — when a section with `data-bg="navy"` enters the
+   viewport, the `<BackgroundShift>` client component adds `page-navy`
+   to the <html> element. Everything that wants to flip colour in navy
+   mode can key off this class. The CSS transition timing is applied
+   inline by BackgroundShift (single source of truth for duration /
+   easing); this rule only owns the end-state values. */
+html.page-navy {
+  background: var(--cs-blue-deep);
+  color: var(--cs-bg);
+}
+html.page-navy [data-bg-flip="text"] {
+  color: var(--cs-bg);
+}
+html.page-navy [data-bg-flip="text-muted"] {
+  color: rgba(253, 252, 248, 0.7);
+}
+
+/* Navbar must stay legible when the page flips to navy. The navbar
+   uses `text-cs-blue-deep` / `text-cs-text` (navy ink) which is
+   invisible on a navy body. Flip the header bar to an opaque navy
+   panel with cream descendants, so the nav, locale toggle, and
+   hamburger glyph all read while the page is in navy mode. Scoped
+   to <header> so it never bleeds into page content. */
+html.page-navy header {
+  background-color: rgba(10, 39, 70, 0.9);
+  color: var(--cs-bg);
+}
+html.page-navy header svg {
+  stroke: var(--cs-bg);
+}
+html.page-navy header a,
+html.page-navy header button {
+  color: var(--cs-bg);
+  border-color: rgba(253, 252, 248, 0.28);
+}
+/* Gold pill + gold text stay gold in navy mode — the gold reads fine
+   on navy and is the consistent brand accent. No override needed. */
+
+/* ScrollProgress ring — percentage digits flip to cream when navy. */
+html.page-navy [data-cs-ring="digits"] {
+  color: var(--cs-bg);
+}
+
 body {
-  background: var(--cs-bg);
-  color: var(--cs-text);
+  /* Transparent by default so the <html> element's background-color
+     (cream, or navy under .page-navy) shows through. Keeping bg/color
+     on html lets BackgroundShift drive the cream↔navy crossfade from
+     one element instead of two. */
+  background: transparent;
+  color: inherit;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
