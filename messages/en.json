@@ -7,7 +7,10 @@
     "menu": "Menu",
     "branches": "Branches",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mainNav": "Main navigation"
   },
   "hero": {
     "plain": "FROM THE",
@@ -24,16 +27,33 @@
     "comingSoon": "Coming soon",
     "viewAll": "View all"
   },
-  "signatureDish": {
-    "plain": "OUR",
-    "pill": "SIGNATURE",
-    "description": "A handful of fresh-caught fillet. A buttered baguette, toasted till it cracks. Lemon, tartare, a few pickles for bite. The sandwich that built this house.",
-    "cta": "See the sandwiches",
-    "imagePlaceholder": "Signature fish sandwich · cutout from IG pipeline",
-    "callouts": {
-      "bread": "Hand-toasted baguette",
-      "fish": "This-morning's catch",
-      "sauce": "House tartare, every day"
+  "signatureShowcase": {
+    "plain": "ON",
+    "pill": "THE LINE",
+    "description": "Five plates the kitchen is known for. Scroll the line — each one built from a catch that came in this morning.",
+    "counterLabel": "Signatures",
+    "cta": "See on menu",
+    "dishes": {
+      "crispyFillet": {
+        "name": "Crispy Fillet",
+        "tagline": "Fresh-caught fillet, buttered baguette, house tartare. The sandwich that built this house."
+      },
+      "shrimpBurger": {
+        "name": "Shrimp Burger",
+        "tagline": "Chopped shrimp, crisp brioche, lemon aioli. Originally a Cola-branch experiment — now a staple."
+      },
+      "grilledShrimps": {
+        "name": "Grilled Shrimps",
+        "tagline": "Charcoal-kissed, lemon-garlic sauce, a drizzle of olive oil. Minimal. On purpose."
+      },
+      "loadedSeafoodMix": {
+        "name": "Loaded Seafood Mix",
+        "tagline": "Calamari, shrimp, fillet, fries. The whole sea on one plate — for the table, not the plate."
+      },
+      "calamari": {
+        "name": "Calamari Sandwich",
+        "tagline": "Golden rings, fresh bread, a squeeze of lemon. The late-night one."
+      }
     }
   },
   "menuPreview": {
