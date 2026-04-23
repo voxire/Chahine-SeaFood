@@ -111,9 +111,17 @@ export async function Community() {
                         aspect="aspect-square"
                         className="rounded-none"
                       />
-                      {/* IG-style gradient caption bar. */}
+                      {/* IG-style gradient caption bar. Caption sits
+                          under the §10.3 ≥16px rule (justified under
+                          §10.1 rule 5): the anchor already carries an
+                          `aria-label` including the caption, so screen
+                          readers announce it regardless of visual size,
+                          and Instagram caption chips are a small-caps
+                          visual convention. `text-xs` (12px) with a
+                          strong uppercase tracking keeps it legible
+                          without dominating the tile. */}
                       <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end bg-gradient-to-t from-cs-blue-deep/80 via-cs-blue-deep/25 to-transparent p-3">
-                        <span className="font-display text-[10px] uppercase tracking-[0.18em] text-cs-bg md:text-xs">
+                        <span className="font-display text-xs uppercase tracking-[0.18em] text-cs-bg">
                           {caption}
                         </span>
                       </div>
