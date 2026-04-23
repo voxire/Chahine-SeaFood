@@ -115,9 +115,10 @@ export async function Hero() {
 
       {/* 5. Type stack — centred content layer. */}
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-72px)] max-w-container flex-col items-center justify-center px-6 py-20 text-center">
-        <FadeIn>
-          <SectionHeading plain={t("plain")} pill={t("pill")} align="center" />
-        </FadeIn>
+        {/* SectionHeading does its own scroll-triggered reveal per
+            #61; the outer FadeIn was double-triggering the same
+            moment and muddying the stagger. */}
+        <SectionHeading plain={t("plain")} pill={t("pill")} align="center" />
 
         {/* h1 uses SplitText for a stagger reveal — word-split on Arabic,
             char-split on Latin. */}
@@ -141,12 +142,20 @@ export async function Hero() {
           delay={0.75}
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
-          <MagneticButton>
+          {/* Hero CTAs ship with strength=22 — almost double the
+              MagneticButton primitive default of 12. Rationale: the
+              hero is the site's only cream-on-cobalt kinetic moment,
+              and its CTAs are visually big (px-7 + py-3.5 + display
+              font). A conservative 12px pull on elements that large
+              barely reads; 22px makes the cursor "magnetize" clearly
+              without feeling grabby. Keep the primitive default at 12
+              for secondary CTAs elsewhere on the site. */}
+          <MagneticButton strength={22}>
             <StickerLink href="/menu" variant="gold">
               {t("ctaMenu")}
             </StickerLink>
           </MagneticButton>
-          <MagneticButton>
+          <MagneticButton strength={22}>
             <StickerLink href="/branches" variant="ghost">
               {t("ctaBranches")}
             </StickerLink>
