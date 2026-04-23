@@ -107,10 +107,17 @@ export function StoryStripScene({
           </motion.div>
         </div>
 
-        {/* Right — masked photo strip that scrolls through three chapters. */}
+        {/* Right — masked photo strip that scrolls through three chapters.
+            Mobile-first height tuned for the pinned split to actually
+            fit inside `calc(100vh - 72px)` on small phones (iPhone SE
+            at 667 high is the tight case). Text column ≈ 300px + gap
+            ≈ 40px + strip must sit under ≈ 255px on a 595px pinned
+            frame, so base `h-[34vh] max-h-[320px]` keeps the strip
+            proportional to the viewport without overflowing. md: goes
+            back to the authored desktop height. */}
         <div
           aria-hidden
-          className="relative h-[54vh] max-h-[520px] overflow-hidden rounded-lg ring-1 ring-cs-text/10 bg-cs-surface md:h-[560px] md:max-h-none"
+          className="relative h-[34vh] max-h-[320px] overflow-hidden rounded-lg ring-1 ring-cs-text/10 bg-cs-surface md:h-[560px] md:max-h-none"
         >
           <motion.div
             style={{ y: stripY }}
