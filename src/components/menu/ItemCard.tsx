@@ -114,7 +114,7 @@ export function ItemCard({ item, locale, className, branch }: Props) {
         </span>
       </header>
 
-      <p className="text-sm leading-relaxed text-cs-text-muted md:text-base">
+      <p className="text-base leading-relaxed text-cs-text-muted">
         {description}
       </p>
 
@@ -128,8 +128,8 @@ export function ItemCard({ item, locale, className, branch }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           className={clsx(
-            "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-cs-gold px-5 py-2",
-            "font-display text-sm font-black uppercase tracking-wider text-cs-on-gold",
+            "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill bg-cs-gold px-5 py-3",
+            "font-display text-base font-black uppercase tracking-wider text-cs-on-gold",
             "transition-transform duration-200 ease-cs hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cs-blue-deep",
           )}
           aria-label={`${orderLabel} — ${name}`}
@@ -141,8 +141,8 @@ export function ItemCard({ item, locale, className, branch }: Props) {
         <Link
           href={orderHref}
           className={clsx(
-            "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill border border-cs-blue-deep bg-cs-surface px-5 py-2",
-            "font-display text-sm font-black uppercase tracking-wider text-cs-blue-deep",
+            "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-pill border border-cs-blue-deep bg-cs-surface px-5 py-3",
+            "font-display text-base font-black uppercase tracking-wider text-cs-blue-deep",
             "transition-transform duration-200 ease-cs hover:-translate-y-0.5 hover:bg-cs-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cs-blue-deep",
           )}
           aria-label={`${orderLabel} — ${name}`}
