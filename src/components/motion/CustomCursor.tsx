@@ -14,15 +14,19 @@ const STATE_MAP: Record<string, CursorState> = {
 /**
  * Custom cursor — dot + ring that morphs over interactive targets.
  *
- * Opt-in behind the `?cursor=1` query param per the Q5 decision. The
- * gate lives inside this component so we can wire it into the root
- * layout without shipping it on day one. Once tuned, flip the default
- * to `true` and retire the flag.
+ * On by default for mouse-driven desktop (`(hover: hover) and
+ * (pointer: fine)`). The previous `?cursor=1` opt-in gate is gone now
+ * that the cursor has been tuned across all four states and we've
+ * confirmed it doesn't fight the rest of the motion language. A kill
+ * switch `?cursor=0` remains for screenshot / video capture workflows
+ * where a floating brand cursor gets in the way.
  *
  * Hiding rules (in order of priority):
- *   1. Not mounted on touch devices (`@media (pointer: coarse)`).
+ *   1. Not mounted on touch devices or touch-capable browsers with
+ *      coarse pointers — `(hover: hover) and (pointer: fine)` is the
+ *      canonical CSS feature query for "real mouse with hover state."
  *   2. Hidden under `prefers-reduced-motion: reduce`.
- *   3. Hidden when the user hasn't passed `?cursor=1`.
+ *   3. Hidden when the user passes `?cursor=0`.
  *
  * Targeting: any element with `data-cursor="<state>"` morphs the
  * cursor into the corresponding state on hover. States:
@@ -44,13 +48,16 @@ export function CustomCursor() {
   const ringX = useSpring(x, { damping: 24, stiffness: 260, mass: 0.4 });
   const ringY = useSpring(y, { damping: 24, stiffness: 260, mass: 0.4 });
 
-  // Gate on query param + non-touch + reduced-motion check.
+  // Gate: desktop mouse + not reduced-motion + not killed via query.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const qs = new URLSearchParams(window.location.search);
-    const wants = qs.get("cursor") === "1";
-    const touch = window.matchMedia("(pointer: coarse)").matches;
-    setEnabled(wants && !touch && !shouldReduce);
+    if (qs.get("cursor") === "0") {
+      setEnabled(false);
+      return;
+    }
+    const desktop = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    setEnabled(desktop && !shouldReduce);
   }, [shouldReduce]);
 
   // Mouse tracking — only wired when enabled so disabled sessions pay
