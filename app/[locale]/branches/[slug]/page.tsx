@@ -248,7 +248,7 @@ export default async function BranchDetailPage({ params }: Props) {
         <FadeIn delay={0.5} className="mt-14 flex justify-center">
           <Link
             href="/branches"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-cs-blue transition-colors hover:text-cs-blue-deep"
+            className="inline-flex min-h-[44px] items-center gap-2 px-2 text-base font-semibold text-cs-blue transition-colors hover:text-cs-blue-deep"
           >
             <span aria-hidden>←</span>
             {t("backToAll")}
