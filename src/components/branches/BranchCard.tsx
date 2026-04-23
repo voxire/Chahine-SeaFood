@@ -59,18 +59,21 @@ export async function BranchCard({ branch, locale }: Props) {
         </div>
       </dl>
 
+      {/* CTAs sized to clear §10.3 on mobile: min-h-[44px] + px-5 py-3
+          + text-base. These are the primary branch-level actions so
+          they must be fully legible and tappable on phones. */}
       <div className="flex flex-wrap gap-2">
         {hasPhone ? (
           <a
             href={buildContactLink(branch.phone)}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex flex-1 items-center justify-center rounded-pill bg-cs-gold px-4 py-2.5 text-sm font-semibold text-cs-on-gold transition-transform hover:scale-[1.02] hover:bg-cs-gold-soft"
+            className="inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill bg-cs-gold px-5 py-3 text-base font-semibold text-cs-on-gold transition-transform hover:scale-[1.02] hover:bg-cs-gold-soft"
           >
             {tCommon("orderNow")}
           </a>
         ) : (
-          <span className="inline-flex flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-4 py-2.5 text-sm text-cs-text-muted">
+          <span className="inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-5 py-3 text-base text-cs-text-muted">
             {tCommon("comingSoon")}
           </span>
         )}
@@ -78,7 +81,7 @@ export async function BranchCard({ branch, locale }: Props) {
           href={branchMapsUrl(branch, locale)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-4 py-2.5 text-sm font-semibold text-cs-blue-deep transition-colors hover:border-cs-blue hover:text-cs-blue"
+          className="inline-flex min-h-[44px] flex-1 items-center justify-center rounded-pill border border-cs-text/15 px-5 py-3 text-base font-semibold text-cs-blue-deep transition-colors hover:border-cs-blue hover:text-cs-blue"
         >
           {t("openOnMap")}
         </a>
