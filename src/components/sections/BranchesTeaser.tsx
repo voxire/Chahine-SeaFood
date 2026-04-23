@@ -89,6 +89,16 @@ export async function BranchesTeaser() {
           />
         </FadeIn>
 
+        {/* Mobile UX strategy (per CLAUDE.md §0 + §10.1 rule 5):
+            On narrow viewports the map stacks above and is effectively
+            DECORATIVE — SVG pins render at ~18px which is well below
+            the 44px tap target, and can't be enlarged without
+            overlapping each other (Beirut branches Cola + Hamra sit
+            close on the real geography). The pill list below becomes
+            the primary branch-selection affordance on mobile; each
+            chip routes to the branch detail page. On desktop the map
+            regains primacy via hover-to-open BranchPopup, with the
+            pills acting as a quick-scan sidebar. */}
         <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,_1fr)_minmax(0,_1.2fr)] lg:items-center">
           {/* Left: silhouette + status. On mobile this stacks above. */}
           <FadeIn className="flex justify-center">
@@ -101,15 +111,19 @@ export async function BranchesTeaser() {
             />
           </FadeIn>
 
-          {/* Right: branch pill list. Kept simple chips so the eye
-              gets a quick scan of the ten branch names. */}
+          {/* Right: branch pill list. On mobile these are the primary
+              interactive affordance (map pins are too small to tap).
+              Sized to clear the 44×44 tap-target rule (§10.3) and the
+              ≥16px interactive-text rule: `px-5 py-3 text-base` →
+              ~48px tall pills. Desktop re-scales slightly smaller
+              since the map absorbs the primary interaction there. */}
           <FadeIn delay={0.15}>
             <ul className="flex flex-wrap justify-center gap-3 lg:justify-start">
               {branches.map((b) => (
                 <li key={b.slug}>
                   <Link
                     href={`/branches/${b.slug}`}
-                    className="inline-flex items-center rounded-pill border border-cs-text/15 bg-cs-surface px-4 py-2 text-sm font-medium text-cs-text-muted transition-colors hover:border-cs-blue/40 hover:text-cs-blue-deep"
+                    className="inline-flex items-center rounded-pill border border-cs-text/15 bg-cs-surface px-5 py-3 text-base font-medium text-cs-text-muted transition-colors hover:border-cs-blue/40 hover:text-cs-blue-deep lg:px-4 lg:py-2 lg:text-sm"
                     data-cursor="link"
                   >
                     {tBranches(b.slug)}
