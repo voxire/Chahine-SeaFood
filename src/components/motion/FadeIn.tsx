@@ -17,12 +17,25 @@ type Props = {
 
 /**
  * Baseline enter-on-view fade. Respects `prefers-reduced-motion`.
- * Use this as the default wrapper for any element that should animate in.
+ *
+ * Triggering
+ * ──────────
+ * Uses `whileInView` with `once: true`, so elements BELOW the fold
+ * reveal when they first scroll into the viewport rather than animating
+ * silently during the initial page load. Above-the-fold elements fire
+ * immediately on mount (their intersection ratio is already >= the
+ * threshold).
+ *
+ * Defaults
+ * ────────
+ * Tuned for a weighted, cinematic entrance (matching the reference
+ * quality bar at frieslab.net): y=32px, duration=0.85s. Callers can
+ * override either for lighter/heavier feels.
  */
 export function FadeIn({
   children,
   delay = 0,
-  y = 16,
+  y = 32,
   stagger = 0,
   className,
   style,
@@ -40,9 +53,10 @@ export function FadeIn({
   return (
     <motion.div
       initial={{ opacity: 0, y }}
-      animate={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration: 0.6,
+        duration: 0.85,
         ease: [0.22, 1, 0.36, 1],
         delay,
         staggerChildren: stagger,
