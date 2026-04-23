@@ -80,14 +80,14 @@ export async function BranchesTeaser() {
       className="bg-cs-surface-2 py-section-y"
     >
       <div className="mx-auto max-w-container px-6">
-        <FadeIn>
-          <SectionHeading
-            plain={t("plain")}
-            pill={t("pill")}
-            subhead={t("description")}
-            as="h2"
-          />
-        </FadeIn>
+        {/* Redundant FadeIn wrapper removed — SectionHeading drives
+            its own scroll-triggered reveal (see #61). */}
+        <SectionHeading
+          plain={t("plain")}
+          pill={t("pill")}
+          subhead={t("description")}
+          as="h2"
+        />
 
         {/* Mobile UX strategy (per CLAUDE.md §0 + §10.1 rule 5):
             On narrow viewports the map stacks above and is effectively

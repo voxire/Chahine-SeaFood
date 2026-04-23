@@ -51,14 +51,14 @@ export async function Community() {
       className="bg-cs-bg py-section-y"
     >
       <div className="mx-auto max-w-container px-6">
-        <FadeIn>
-          <SectionHeading
-            plain={t("plain")}
-            pill={t("pill")}
-            subhead={t("description")}
-            as="h2"
-          />
-        </FadeIn>
+        {/* Redundant FadeIn wrapper removed — SectionHeading drives
+            its own scroll-triggered reveal (see #61). */}
+        <SectionHeading
+          plain={t("plain")}
+          pill={t("pill")}
+          subhead={t("description")}
+          as="h2"
+        />
 
         <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,_0.9fr)_minmax(0,_1.1fr)] lg:items-center lg:gap-20">
           {/* Left — the headline number + handle + CTA. */}
