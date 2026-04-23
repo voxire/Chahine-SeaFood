@@ -9,9 +9,11 @@ import {
   restaurantChainSchema,
 } from "@/lib/seo/schemas";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { BackgroundShift } from "@/components/motion/BackgroundShift";
 import { Hero } from "@/components/sections/Hero";
 import { SignatureShowcase } from "@/components/sections/SignatureShowcase";
 import { MenuPreview } from "@/components/sections/MenuPreview";
+import { Interstitial } from "@/components/sections/Interstitial";
 import { BranchesTeaser } from "@/components/sections/BranchesTeaser";
 import { StoryStrip } from "@/components/sections/StoryStrip";
 import { Community } from "@/components/sections/Community";
@@ -50,9 +52,20 @@ export default function HomePage({ params }: Props) {
         data={[organizationSchema(locale), restaurantChainSchema(locale)]}
       />
 
+      {/* Home-only background crossfade — when a section marked
+          `data-bg="navy"` scrolls into the viewport's middle band,
+          the page bg flips from cream to navy. Currently applied to
+          the Interstitial divider so the "going deep into the sea"
+          moment actually reads that way visually. */}
+      <BackgroundShift />
+
       <Hero />
       <SignatureShowcase />
       <MenuPreview />
+      {/* Pinned sea-line divider — gives the eye a breathing beat
+          between "food" and "find us," and cues the reader that the
+          next chapter is starting. */}
+      <Interstitial />
       <BranchesTeaser />
       <StoryStrip />
       <Community />
