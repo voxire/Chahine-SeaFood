@@ -154,8 +154,10 @@ export async function MenuPreview() {
                   <h3 className="mt-3 font-display text-xl font-black uppercase leading-tight text-cs-blue-deep transition-colors group-hover:text-cs-blue md:text-2xl">
                     {name}
                   </h3>
-                  {/* Ingredient strip */}
-                  <p className="mt-3 text-sm leading-relaxed text-cs-text-muted md:text-base">
+                  {/* Ingredient strip. Base `text-base` (16px) meets
+                      §10.3's ≥16px rule — the description sits inside a
+                      Link so it counts as interactive text. */}
+                  <p className="mt-3 text-base leading-relaxed text-cs-text-muted">
                     {description}
                   </p>
                   {/* Arrow affordance — picks up `dir` automatically */}
