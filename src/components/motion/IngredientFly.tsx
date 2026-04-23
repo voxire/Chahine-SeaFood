@@ -1,6 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "framer-motion";
 import type { CSSProperties, ReactNode } from "react";
 
 type Direction = "left" | "right" | "top" | "bottom";
@@ -83,6 +90,43 @@ const PIN_STYLES: Record<NonNullable<IngredientFlyProps["pin"]>, CSSProperties> 
  * Respects `prefers-reduced-motion: reduce` — when set, children are
  * rendered in their final state with no transition.
  */
+/**
+ * Scroll-velocity micro-rotation.
+ *
+ * Hero garnishes feel dead if they just pin to their corners after
+ * their enter animation completes — real decorations on a cream page
+ * should respond to the reader's energy. This hook subscribes to
+ * `scrollY` velocity (pixels/sec, signed — negative scrolling up),
+ * smooths it with a spring, and maps it to a rotation angle capped at
+ * ±8° so the garnish tilts in the direction of scroll, returning to
+ * zero when the user stops.
+ *
+ * The rotation is ADDED to the enter animation's end-state rotate
+ * value via `useTransform` composition, so items with a baseline tilt
+ * (e.g. Shrimp's rotate=14) still "rest" at their design rotation and
+ * only tilt AROUND it when the user scrolls.
+ *
+ * Hero-only primitive: the hook is cheap (one scroll listener, one
+ * spring) but scroll velocity tracking across the entire page would be
+ * wasteful for elements below the fold that never see it.
+ */
+function useScrollTilt(baseRotate: number) {
+  const { scrollY } = useScroll();
+  const velocity = useVelocity(scrollY);
+  const smoothed = useSpring(velocity, {
+    damping: 18,
+    stiffness: 110,
+    mass: 0.4,
+  });
+  // Velocity can easily reach ±3000 px/s on a trackpad flick. Divide
+  // to map it into ±8° range, then clamp in case of genuinely wild
+  // input (inertial scroll on trackpads can spike higher).
+  return useTransform(smoothed, (v) => {
+    const tilt = Math.max(-8, Math.min(8, v / 200));
+    return baseRotate + tilt;
+  });
+}
+
 export function IngredientFly({
   from = "left",
   offset,
@@ -97,6 +141,11 @@ export function IngredientFly({
   const base = DEFAULTS[from];
   const merged: Offset = { ...base, ...offset };
 
+  // Baseline rotation from the design (e.g. Shrimp rotates 14°, Lemon
+  // rotates -18°). Scroll tilt is ADDED to this so items tilt around
+  // their resting angle rather than rotating from zero.
+  const rotateTilt = useScrollTilt(merged.rotate ?? 0);
+
   const initial = shouldReduce
     ? { opacity: 1, x: 0, y: 0, scale: merged.scale ?? 1, rotate: merged.rotate ?? 0 }
     : {
@@ -107,7 +156,17 @@ export function IngredientFly({
         rotate: merged.rotate ?? 0,
       };
 
-  const animate = { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 };
+  const animate = {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    // After the enter animation completes, framer-motion hands off the
+    // `rotate` property to the `style.rotate` MotionValue below. The
+    // `animate` target matches the baseline so the handoff is seamless
+    // (no visible snap when scroll tilt takes over).
+    rotate: merged.rotate ?? 0,
+  };
 
   return (
     <motion.div
@@ -115,6 +174,10 @@ export function IngredientFly({
       style={{
         willChange: "transform, opacity",
         ...(pin ? PIN_STYLES[pin] : null),
+        // Scroll tilt takes over the rotate axis after the enter
+        // animation resolves. Reduced-motion users get the static
+        // baseline angle — no scroll subscription work.
+        ...(shouldReduce ? {} : { rotate: rotateTilt }),
         ...style,
       }}
       initial={initial}
