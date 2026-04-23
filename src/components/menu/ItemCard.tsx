@@ -5,6 +5,7 @@ import type { MenuItem } from "@/data/menu";
 import type { Locale } from "../../../i18n";
 import { formatLBP } from "@/lib/format";
 import { menuImage } from "@/lib/menuImage";
+import { RevealMask } from "@/components/motion/RevealMask";
 import { buildOrderLink } from "@/lib/whatsapp";
 
 type Props = {
@@ -76,14 +77,21 @@ export function ItemCard({ item, locale, className, branch }: Props) {
           through to no-image layout when a photo isn't wired up yet. */}
       {photo ? (
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-cs-surface-2">
-          <Image
-            src={photo}
-            alt={`${name} — ${description}`}
-            fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-            loading="lazy"
-            className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
-          />
+          {/* Scroll-driven clip-path reveal wrapping the image. On a
+              long category page the grid scrolls past many items —
+              RevealMask gives each card image a cinematic uncover as
+              it enters the viewport, rather than popping in all at
+              once. */}
+          <RevealMask direction="bottom" className="absolute inset-0">
+            <Image
+              src={photo}
+              alt={`${name} — ${description}`}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              loading="lazy"
+              className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
+            />
+          </RevealMask>
         </div>
       ) : null}
 
