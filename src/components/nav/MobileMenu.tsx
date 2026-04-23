@@ -1,7 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { Link } from "@/lib/i18n/navigation";
 import { usePathname } from "@/lib/i18n/navigation";
@@ -55,10 +56,28 @@ type Props = {
  */
 export function MobileMenu({ links, openLabel, closeLabel, mainNavLabel }: Props) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isRtl, setIsRtl] = useState(false);
   const pathname = usePathname();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const prefersReduced = useReducedMotion();
+
+  // Wait for client mount before rendering the portal target. The
+  // drawer is portalled to `document.body` (see the AnimatePresence
+  // block below) to escape the Navbar <header>'s `backdrop-filter`,
+  // which creates a containing block that would otherwise trap the
+  // `position: fixed` panel at 72px tall — clipping the entire
+  // drawer to the navbar height.
+  useEffect(() => {
+    setMounted(true);
+    // Read writing direction once on mount. Used below to drive the
+    // panel's slide direction — LTR pulls in from the right, RTL from
+    // the left. next-intl sets `dir` on the <html> element, so this
+    // check is correct the moment the portal mounts.
+    setIsRtl(document.documentElement.dir === "rtl");
+  }, []);
+
 
   // Close on route change — ensures the drawer never lingers after
   // the user taps a link.
@@ -128,19 +147,28 @@ export function MobileMenu({ links, openLabel, closeLabel, mainNavLabel }: Props
         </svg>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="mobile-nav"
+      {mounted &&
+        createPortal(
+          <div
             id="mobile-nav-drawer"
             role="dialog"
-            aria-modal="true"
+            aria-modal={open}
+            aria-hidden={!open}
             aria-label={mainNavLabel}
-            initial={prefersReduced ? { opacity: 0 } : { opacity: 0 }}
-            animate={prefersReduced ? { opacity: 1 } : { opacity: 1 }}
-            exit={prefersReduced ? { opacity: 0 } : { opacity: 0 }}
-            transition={{ duration: prefersReduced ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-50 md:hidden"
+            style={{
+              // Keep the drawer always mounted so the panel can ride
+              // its initial `translateX(100%)` on first paint and CSS
+              // transitions can then animate to 0 when `open` flips.
+              // AnimatePresence approach didn't work: the child mounted
+              // with `open: true` on the very first render, so the
+              // browser never saw a transition between states.
+              opacity: open ? 1 : 0,
+              pointerEvents: open ? "auto" : "none",
+              transition: prefersReduced
+                ? "opacity 0ms"
+                : "opacity 200ms cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           >
             {/* Backdrop — tapping here closes the drawer. The
                 backdrop is a separate element (not the panel) so
@@ -157,17 +185,43 @@ export function MobileMenu({ links, openLabel, closeLabel, mainNavLabel }: Props
                 right. Width capped at 22rem so short landscape
                 phones still see a hint of the underlying page.
                 Uses the brand wave pattern for continuity with the
-                PageTransition curtain. */}
-            <motion.div
-              initial={prefersReduced ? { opacity: 0 } : { x: "100%" }}
-              animate={prefersReduced ? { opacity: 1 } : { x: 0 }}
-              exit={prefersReduced ? { opacity: 0 } : { x: "100%" }}
-              transition={{
-                duration: prefersReduced ? 0 : 0.32,
-                ease: [0.22, 1, 0.36, 1],
-              }}
+                PageTransition curtain.
+                Slide animation is CSS-driven (not framer-motion)
+                because a nested motion.div inside the portalled
+                AnimatePresence was stalling its translateX at the
+                halfway point under React dev StrictMode + Fast
+                Refresh. A CSS transition keyed off the `open` state
+                is simpler, always runs to completion, and doesn't
+                require AnimatePresence coordination. Reduced motion
+                falls back to a plain fade (outer opacity animation
+                still runs). */}
+            <div
               className="absolute right-0 top-0 flex h-full w-full max-w-[22rem] flex-col bg-cs-bg shadow-2xl rtl:left-0 rtl:right-auto"
               style={{
+                // Inline `transform` + `transition` instead of Tailwind
+                // `translate-x-*` classes, because the Tailwind utilities
+                // are CSS-variable-based and browsers don't reliably
+                // animate transitions when only the variable changes —
+                // the panel was stalling exactly at 50% translateX in
+                // practice. Explicit transform string gives us a clean
+                // transitionable property value.
+                // LTR hides off-screen-right (translateX(100%)), RTL
+                // hides off-screen-left (translateX(-100%)). Both use
+                // `absolute right-0` / `rtl:left-0` for resting edge,
+                // so the sign flip is the only piece we drive in JS.
+                // The drawer container is always mounted (opacity
+                // gated by `open`) so the first paint of the panel
+                // renders with the off-screen transform, and CSS
+                // transition picks up when `open` flips to animate
+                // the slide cleanly.
+                transform: open
+                  ? "translateX(0)"
+                  : isRtl
+                  ? "translateX(-100%)"
+                  : "translateX(100%)",
+                transition: prefersReduced
+                  ? "none"
+                  : "transform 320ms cubic-bezier(0.22, 1, 0.36, 1)",
                 backgroundImage: "url(/patterns/wave.svg)",
                 backgroundRepeat: "repeat",
                 backgroundSize: "360px",
@@ -223,10 +277,10 @@ export function MobileMenu({ links, openLabel, closeLabel, mainNavLabel }: Props
                   ))}
                 </ul>
               </nav>
-            </motion.div>
-          </motion.div>
+              </div>
+          </div>,
+          document.body,
         )}
-      </AnimatePresence>
     </>
   );
 }
