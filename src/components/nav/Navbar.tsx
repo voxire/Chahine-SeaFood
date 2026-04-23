@@ -3,9 +3,20 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { LocaleToggle } from "./LocaleToggle";
+import { MobileMenu } from "./MobileMenu";
 
 export async function Navbar() {
   const t = await getTranslations("nav");
+
+  // Link list — resolved server-side so the MobileMenu client island
+  // doesn't need to re-hydrate the i18n bundle. Identical order to the
+  // desktop nav below so keyboard users get the same tab sequence.
+  const mobileLinks = [
+    { href: "/menu", label: t("menu") },
+    { href: "/branches", label: t("branches") },
+    { href: "/about", label: t("about") },
+    { href: "/contact", label: t("contact") },
+  ];
 
   return (
     <>
@@ -28,6 +39,9 @@ export async function Navbar() {
               Chahine Seafood
             </span>
           </Link>
+
+          {/* Desktop nav — hidden below md. On mobile the hamburger
+              drawer takes over (see <MobileMenu /> below). */}
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
             <Link
               href="/menu"
@@ -55,8 +69,20 @@ export async function Navbar() {
             </Link>
             <LocaleToggle />
           </nav>
-          <div className="md:hidden">
+
+          {/* Mobile cluster — locale toggle + hamburger. Before this
+              commit there was no hamburger and the four nav links were
+              `hidden md:flex`, leaving mobile users with no way to
+              reach /menu, /branches, /about, or /contact. That was a
+              critical §0 mobile-first failure. MobileMenu fixes it. */}
+          <div className="flex items-center gap-2 md:hidden">
             <LocaleToggle />
+            <MobileMenu
+              links={mobileLinks}
+              openLabel={t("openMenu")}
+              closeLabel={t("closeMenu")}
+              mainNavLabel={t("mainNav")}
+            />
           </div>
         </div>
       </header>
