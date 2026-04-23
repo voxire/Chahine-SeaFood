@@ -83,7 +83,10 @@ export async function Hero() {
           offset={{ rotate: -18 }}
           className="text-cs-gold"
         >
-          <LemonSlice className="h-24 w-24 md:h-28 md:w-28" />
+          {/* Mobile-first sizing (per CLAUDE.md §10.1). On 390px viewports
+              the lemon sits at `right: 4vw` (~15px) with a 72px footprint
+              so it reads as a corner accent, not a dominant mascot. */}
+          <LemonSlice className="h-[72px] w-[72px] sm:h-20 sm:w-20 md:h-28 md:w-28" />
         </IngredientFly>
 
         <IngredientFly
@@ -92,7 +95,12 @@ export async function Hero() {
           delay={0.15}
           offset={{ rotate: 14 }}
         >
-          <Shrimp className="h-32 w-32 md:h-40 md:w-40" />
+          {/* Mobile-first sizing. Shrimp at the original h-32 w-32 (128px)
+              dominated a 390-wide hero — it read as a cartoon mascot
+              rather than garnish. Scaling from 80px base up to 160px at
+              md: keeps it present-but-subordinate on phones and gives it
+              authority on desktop. */}
+          <Shrimp className="h-20 w-20 sm:h-28 sm:w-28 md:h-40 md:w-40" />
         </IngredientFly>
 
         <IngredientFly
