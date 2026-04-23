@@ -10,7 +10,7 @@ import {
 } from "@/lib/seo/schemas";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { Hero } from "@/components/sections/Hero";
-import { SignatureDish } from "@/components/sections/SignatureDish";
+import { SignatureShowcase } from "@/components/sections/SignatureShowcase";
 import { MenuPreview } from "@/components/sections/MenuPreview";
 import { BranchesTeaser } from "@/components/sections/BranchesTeaser";
 import { StoryStrip } from "@/components/sections/StoryStrip";
@@ -51,7 +51,7 @@ export default function HomePage({ params }: Props) {
       />
 
       <Hero />
-      <SignatureDish />
+      <SignatureShowcase />
       <MenuPreview />
       <BranchesTeaser />
       <StoryStrip />
