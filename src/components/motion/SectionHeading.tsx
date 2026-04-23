@@ -24,6 +24,16 @@ type Props = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
+ * Scripts where letters must stay in a single run so the browser can
+ * shape / join them correctly. Splitting by grapheme breaks joining
+ * (the disconnected-Arabic bug #41, previously fixed in Pill.tsx but
+ * not here). Covers Arabic, Arabic supplements, Arabic presentation
+ * forms, Hebrew, and adjacent ranges.
+ */
+const CURSIVE_SCRIPT_RE =
+  /[\u0590-\u05FF\u0600-\u06FF\u0700-\u074F\u0750-\u077F\u08A0-\u08FF\uFB00-\uFDFF\uFE70-\uFEFF]/;
+
+/**
  * The signature composition — semi-transparent display word + skewed gold
  * pill + optional subhead. Core building block of every section heading
  * on the site.
@@ -93,12 +103,22 @@ export function SectionHeading({
   // ────────────────────────────────────────────────────────────────
   // Full motion path — scroll-triggered reveal.
   // ────────────────────────────────────────────────────────────────
-  const chars = Array.from(plain);
+  // Cursive scripts (Arabic etc.) need to stay as single-run words so
+  // glyph joining works. For those we split by whitespace and animate
+  // each word; for Latin we keep the per-character stagger that reads
+  // as signature frieslab motion.
+  const isCursive = CURSIVE_SCRIPT_RE.test(plain);
+  const parts: string[] = isCursive
+    ? plain.split(/(\s+)/).filter((p) => p.length > 0)
+    : Array.from(plain);
+  // Slow the stagger slightly for word-chunked reveals so 2–3 chunks
+  // don't fire nearly simultaneously. Characters can stay snappy.
+  const staggerChildren = isCursive ? 0.09 : 0.035;
 
   const plainContainer: Variants = {
     hidden: {},
     visible: {
-      transition: { staggerChildren: 0.035, delayChildren: 0 },
+      transition: { staggerChildren, delayChildren: 0 },
     },
   };
 
@@ -113,7 +133,7 @@ export function SectionHeading({
 
   // Subhead lands after both the plain-word stagger and the pill's own
   // letter-stagger (see Pill's own `whileInView`) have had time to play.
-  const subheadDelay = 0.3 + Math.min(chars.length, 16) * 0.035;
+  const subheadDelay = 0.3 + Math.min(parts.length, 16) * staggerChildren;
 
   const subheadVariant: Variants = {
     hidden: { y: 20, opacity: 0 },
@@ -137,22 +157,31 @@ export function SectionHeading({
           align === "center" ? "justify-center" : "justify-start",
         )}
       >
-        {/* Plain word — char stagger. `aria-label` keeps it readable. */}
+        {/* Plain word — per-character stagger for Latin, per-word
+            stagger for Arabic / cursive scripts so letterforms stay
+            connected. `aria-label` gives SR users the whole word
+            regardless of visual split. */}
         <motion.span
           aria-label={plain}
           className="inline-block font-display text-4xl font-black uppercase leading-none text-cs-text md:text-6xl lg:text-7xl"
           variants={plainContainer}
         >
-          {chars.map((ch, i) => (
-            <motion.span
-              key={i}
-              aria-hidden
-              variants={charVariant}
-              style={{ display: "inline-block" }}
-            >
-              {ch === " " ? "\u00A0" : ch}
-            </motion.span>
-          ))}
+          {parts.map((part, i) =>
+            /^\s+$/.test(part) ? (
+              <span key={i} aria-hidden>
+                {part}
+              </span>
+            ) : (
+              <motion.span
+                key={i}
+                aria-hidden
+                variants={charVariant}
+                style={{ display: "inline-block" }}
+              >
+                {part === " " ? "\u00A0" : part}
+              </motion.span>
+            ),
+          )}
         </motion.span>
 
         {/* Pill — handles its own viewport-triggered letter reveal. */}
