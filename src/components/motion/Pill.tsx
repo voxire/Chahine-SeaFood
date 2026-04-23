@@ -61,6 +61,12 @@ export function Pill({ children, className, size = "md" }: Props) {
 
   // Cursive scripts: stagger by word. The whole word stays in one span so
   // Arabic letters keep their joining behaviour.
+  //
+  // Triggering: `whileInView` with `once: true, amount: 0.4`. This makes
+  // every Pill wait until it actually scrolls into view before playing
+  // its letter-stagger — so below-the-fold pills reveal WHEN the user
+  // reaches them instead of running silently during the initial page
+  // load.
   if (isCursive) {
     const parts = text.split(/(\s+)/); // keep whitespace as its own entry
     return (
@@ -73,7 +79,8 @@ export function Pill({ children, className, size = "md" }: Props) {
               <motion.span
                 key={i}
                 initial={{ y: "40%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.4 }}
                 transition={{
                   delay: i * 0.08,
                   duration: 0.55,
@@ -98,7 +105,8 @@ export function Pill({ children, className, size = "md" }: Props) {
           <motion.span
             key={i}
             initial={{ y: "100%", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.4 }}
             transition={{
               delay: i * 0.03,
               duration: 0.5,

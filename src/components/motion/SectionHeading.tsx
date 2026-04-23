@@ -1,4 +1,7 @@
+"use client";
+
 import clsx from "clsx";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 import { Pill } from "./Pill";
 
@@ -18,14 +21,32 @@ type Props = {
   as?: HeadingTag;
 };
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
 /**
- * The signature composition from frieslab, adapted to Chahine's palette:
- * semi-transparent display word + skewed gold pill + optional subhead.
- * Core building block of every section heading on the site.
+ * The signature composition — semi-transparent display word + skewed gold
+ * pill + optional subhead. Core building block of every section heading
+ * on the site.
  *
- * When used as a page's primary heading, set `as="h1"`. For sub-sections on
- * a page that already has an h1 elsewhere, use `as="h2"` (or the default
- * `div` if the section is purely decorative).
+ * Client-side motion upgrade (frieslab-level reference bar):
+ * the whole composition reveals when it scrolls into view, not when the
+ * page mounts. Characters of the plain word stagger in, the pill plays
+ * its own letter-stagger (see Pill — also viewport-triggered now), and
+ * the optional subhead rises with a short delay.
+ *
+ * Accessibility
+ * ─────────────
+ * - The plain word is wrapped in `aria-label={plain}` with per-char
+ *   spans set to `aria-hidden`, so assistive tech announces the whole
+ *   word and skips the decorative split.
+ * - `useReducedMotion` collapses the whole composition to its static
+ *   final state — no stagger, no translation, no opacity transitions.
+ *
+ * SEO
+ * ───
+ * Text renders in the HTML at mount regardless of viewport state —
+ * only visual opacity + translate are animated. Crawlers and no-JS
+ * pass both receive the full heading text.
  */
 export function SectionHeading({
   plain,
@@ -35,31 +56,120 @@ export function SectionHeading({
   align = "center",
   as = "div",
 }: Props) {
+  const shouldReduce = useReducedMotion();
   const Heading = as;
 
+  // ────────────────────────────────────────────────────────────────
+  // Reduced-motion path — static final-state render, no motion lib.
+  // ────────────────────────────────────────────────────────────────
+  if (shouldReduce) {
+    return (
+      <div className={clsx("w-full", className)}>
+        <Heading
+          className={clsx(
+            "m-0 flex flex-wrap items-center gap-x-4 gap-y-2",
+            align === "center" ? "justify-center" : "justify-start",
+          )}
+        >
+          <span className="font-display text-4xl font-black uppercase leading-none opacity-20 text-cs-text md:text-6xl lg:text-7xl">
+            {plain}
+          </span>
+          <Pill size="lg">{pill}</Pill>
+        </Heading>
+        {subhead ? (
+          <p
+            className={clsx(
+              "mt-4 text-base text-cs-text-muted md:text-lg",
+              align === "center" ? "text-center" : "",
+            )}
+          >
+            {subhead}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+
+  // ────────────────────────────────────────────────────────────────
+  // Full motion path — scroll-triggered reveal.
+  // ────────────────────────────────────────────────────────────────
+  const chars = Array.from(plain);
+
+  const plainContainer: Variants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.035, delayChildren: 0 },
+    },
+  };
+
+  const charVariant: Variants = {
+    hidden: { y: 32, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 0.2, // matches the original "ghost word" tone
+      transition: { duration: 0.55, ease: EASE },
+    },
+  };
+
+  // Subhead lands after both the plain-word stagger and the pill's own
+  // letter-stagger (see Pill's own `whileInView`) have had time to play.
+  const subheadDelay = 0.3 + Math.min(chars.length, 16) * 0.035;
+
+  const subheadVariant: Variants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: EASE, delay: subheadDelay },
+    },
+  };
+
   return (
-    <div className={clsx("w-full", className)}>
+    <motion.div
+      className={clsx("w-full", className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.4 }}
+    >
       <Heading
         className={clsx(
           "m-0 flex flex-wrap items-center gap-x-4 gap-y-2",
-          align === "center" ? "justify-center" : "justify-start"
+          align === "center" ? "justify-center" : "justify-start",
         )}
       >
-        <span className="font-display text-4xl font-black uppercase leading-none opacity-20 text-cs-text md:text-6xl lg:text-7xl">
-          {plain}
-        </span>
+        {/* Plain word — char stagger. `aria-label` keeps it readable. */}
+        <motion.span
+          aria-label={plain}
+          className="inline-block font-display text-4xl font-black uppercase leading-none text-cs-text md:text-6xl lg:text-7xl"
+          variants={plainContainer}
+        >
+          {chars.map((ch, i) => (
+            <motion.span
+              key={i}
+              aria-hidden
+              variants={charVariant}
+              style={{ display: "inline-block" }}
+            >
+              {ch === " " ? "\u00A0" : ch}
+            </motion.span>
+          ))}
+        </motion.span>
+
+        {/* Pill — handles its own viewport-triggered letter reveal. */}
         <Pill size="lg">{pill}</Pill>
       </Heading>
+
       {subhead ? (
-        <p
+        <motion.p
+          variants={subheadVariant}
           className={clsx(
             "mt-4 text-base text-cs-text-muted md:text-lg",
-            align === "center" ? "text-center" : ""
+            align === "center" ? "text-center" : "",
           )}
         >
           {subhead}
-        </p>
+        </motion.p>
       ) : null}
-    </div>
+    </motion.div>
   );
 }
