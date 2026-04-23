@@ -250,7 +250,7 @@ export default async function BranchDetailPage({ params }: Props) {
             href="/branches"
             className="inline-flex min-h-[44px] items-center gap-2 px-2 text-base font-semibold text-cs-blue transition-colors hover:text-cs-blue-deep"
           >
-            <span aria-hidden>←</span>
+            <span aria-hidden className="rtl:rotate-180">←</span>
             {t("backToAll")}
           </Link>
         </FadeIn>

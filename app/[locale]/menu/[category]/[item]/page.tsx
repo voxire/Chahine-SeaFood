@@ -197,7 +197,7 @@ export default async function ItemDetailPage({ params }: Props) {
             href={`/menu/${category}`}
             className="inline-flex min-h-[44px] items-center gap-2 px-2 text-base font-semibold text-cs-blue transition-colors hover:text-cs-blue-deep"
           >
-            <span aria-hidden>←</span>
+            <span aria-hidden className="rtl:rotate-180">←</span>
             {t("backToCategory", { category: tCategories(category) })}
           </Link>
         </FadeIn>

@@ -91,7 +91,7 @@ export default async function ContactPage({ params }: Props) {
                   @chahine.seafood.lb
                 </p>
               </div>
-              <span aria-hidden className="text-cs-blue">→</span>
+              <span aria-hidden className="text-cs-blue rtl:rotate-180">→</span>
             </a>
 
             <a
@@ -108,7 +108,7 @@ export default async function ContactPage({ params }: Props) {
                   chahineseafood.com
                 </p>
               </div>
-              <span aria-hidden className="text-cs-blue">→</span>
+              <span aria-hidden className="text-cs-blue rtl:rotate-180">→</span>
             </a>
           </div>
         </FadeIn>

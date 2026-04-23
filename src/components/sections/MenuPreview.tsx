@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { FadeIn } from "@/components/motion/FadeIn";
 import { CenterTriptych } from "@/components/motion/CenterTriptych";
+import { RevealMask } from "@/components/motion/RevealMask";
 import { SectionHeading } from "@/components/motion/SectionHeading";
 import { LinkButton } from "@/components/ui/Button";
 import { DishPlaceholder, type DishVariant } from "@/components/ornaments/DishPlaceholder";
@@ -93,14 +94,15 @@ export async function MenuPreview() {
       className="bg-cs-bg py-section-y"
     >
       <div className="mx-auto max-w-container px-6">
-        <FadeIn>
-          <SectionHeading
-            plain={t("plain")}
-            pill={t("pill")}
-            subhead={t("description")}
-            as="h2"
-          />
-        </FadeIn>
+        {/* SectionHeading drives its own scroll-triggered reveal since
+            #61, so the outer FadeIn wrapper was redundant work that
+            muddied the stagger. Strip it — just the heading. */}
+        <SectionHeading
+          plain={t("plain")}
+          pill={t("pill")}
+          subhead={t("description")}
+          as="h2"
+        />
 
         {/* Featured kicker */}
         <FadeIn delay={0.15} className="mt-14 text-center">
@@ -128,13 +130,21 @@ export async function MenuPreview() {
                     the branded silhouette placeholder otherwise. */}
                 {photo ? (
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-lg bg-cs-surface-2">
-                    <Image
-                      src={photo}
-                      alt={`${name} — ${description}`}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
-                    />
+                    {/* RevealMask — clip-path wipe from bottom as the
+                        card enters the viewport. Uses `start end` →
+                        `start center` scroll range so the reveal is
+                        already half-finished by the time the card hits
+                        the centre of the viewport, which is when the
+                        eye is actually looking at it. */}
+                    <RevealMask direction="bottom" className="absolute inset-0">
+                      <Image
+                        src={photo}
+                        alt={`${name} — ${description}`}
+                        fill
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className="object-cover transition-transform duration-500 ease-cs group-hover:scale-[1.03]"
+                      />
+                    </RevealMask>
                   </div>
                 ) : (
                   <DishPlaceholder
@@ -160,12 +170,13 @@ export async function MenuPreview() {
                   <p className="mt-3 text-base leading-relaxed text-cs-text-muted">
                     {description}
                   </p>
-                  {/* Arrow affordance — picks up `dir` automatically */}
+                  {/* Arrow affordance — flips 180° under RTL so it
+                      points in the reading direction (← visually). */}
                   <span
                     aria-hidden
                     className="mt-5 inline-flex items-center gap-1 font-display text-xs uppercase tracking-[0.2em] text-cs-blue transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
                   >
-                    →
+                    <span className="rtl:rotate-180">→</span>
                   </span>
                 </div>
               </Link>

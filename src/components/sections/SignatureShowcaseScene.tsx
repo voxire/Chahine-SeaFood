@@ -73,10 +73,14 @@ export function SignatureShowcaseScene({
 
   // Hooks must run unconditionally. Attach the ref only on the motion
   // branch; the static branch leaves it unattached and `useScroll`
-  // tolerates an unmounted target.
+  // tolerates an unmounted target. `layoutEffect: false` silences the
+  // framer-motion dev warning about measuring a ref before hydration —
+  // we don't need the pre-paint measurement because the horizontal
+  // rail isn't visible until scroll progress > 0 anyway.
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
+    layoutEffect: false,
     offset: ["start start", "end end"],
   });
 
@@ -358,11 +362,15 @@ function ShowcaseCard({
           >
             {dish.tagline}
           </p>
-          <div className="mt-5 inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.28em] text-cs-gold-soft transition-transform duration-500 group-hover:translate-x-1 md:mt-6">
+          <div className="mt-5 inline-flex items-center gap-2 font-display text-sm uppercase tracking-[0.28em] text-cs-gold-soft transition-transform duration-500 group-hover:translate-x-1 md:mt-6 rtl:group-hover:-translate-x-1">
             <span style={{ textShadow: "0 1px 6px rgba(10,39,70,0.8)" }}>
               {cta}
             </span>
-            <span aria-hidden style={{ textShadow: "0 1px 6px rgba(10,39,70,0.8)" }}>
+            <span
+              aria-hidden
+              className="rtl:rotate-180"
+              style={{ textShadow: "0 1px 6px rgba(10,39,70,0.8)" }}
+            >
               →
             </span>
           </div>
