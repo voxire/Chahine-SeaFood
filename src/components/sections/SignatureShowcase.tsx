@@ -34,12 +34,18 @@ type DishSlug = {
   href: string;
 };
 
+// Curated to three dishes that together tell the brand story:
+//   1. Crispy Fillet — the signature sandwich ("the one that built
+//      this house")
+//   2. Grilled Shrimps — the heritage grill side, minimal by design
+//   3. Loaded Seafood Mix — the sharing plate, the celebration meal
+//
+// Kept shrimpBurger + calamari i18n strings in the messages file in
+// case the curated set changes later, but they aren't rendered.
 const DISHES: DishSlug[] = [
   { id: "crispyFillet",     category: "sandwiches", slug: "crispy-fillet",      href: "/menu/sandwiches" },
-  { id: "shrimpBurger",     category: "burgers",    slug: "shrimp-burger",      href: "/menu/burgers" },
   { id: "grilledShrimps",   category: "platters",   slug: "grilled-shrimps",    href: "/menu/platters" },
   { id: "loadedSeafoodMix", category: "platters",   slug: "loaded-seafood-mix", href: "/menu/platters" },
-  { id: "calamari",         category: "sandwiches", slug: "calamari",           href: "/menu/sandwiches" },
 ];
 
 export async function SignatureShowcase() {
