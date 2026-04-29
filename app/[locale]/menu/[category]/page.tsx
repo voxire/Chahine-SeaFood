@@ -4,15 +4,12 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { isLocale, type Locale, locales } from "../../../../i18n";
 import { buildPageMetadata } from "@/lib/seo";
-import { FadeIn } from "@/components/motion/FadeIn";
-import { SectionHeading } from "@/components/motion/SectionHeading";
 import {
   categories,
   isCategorySlug,
   type CategoryKey,
 } from "@/data/categories";
-import { itemsByCategory } from "@/data/menu";
-import { MenuMosaic } from "@/components/menu/MenuMosaic";
+import { MenuPageBody } from "@/components/menu/MenuPageBody";
 
 type Props = {
   params: { locale: string; category: string };
@@ -46,42 +43,22 @@ export async function generateMetadata({
   });
 }
 
+/**
+ * Category route — renders the same unified menu body as `/menu`, but
+ * lands at the requested category section. Each category URL stays a
+ * legitimate, indexable, share-able URL (with its own metadata + canonical),
+ * even though structurally it shows the full menu.
+ */
 export default async function CategoryPage({ params }: Props) {
   if (!isLocale(params.locale) || !isCategorySlug(params.category)) {
     notFound();
   }
-  const locale = params.locale as Locale;
-  setRequestLocale(locale);
-
-  const tCategories = await getTranslations("categories");
-  const t = await getTranslations("menuCategory");
-  const category = params.category as CategoryKey;
-  const items = itemsByCategory(category);
+  setRequestLocale(params.locale);
 
   return (
-    <section className="py-section-y">
-      <div className="mx-auto max-w-container px-6">
-        <FadeIn>
-          <SectionHeading
-            plain={t("heading.plain")}
-            pill={tCategories(category)}
-            subhead={t("subhead", { count: items.length })}
-            as="h1"
-          />
-        </FadeIn>
-
-        {items.length === 0 ? (
-          <FadeIn delay={0.2} className="mt-16 text-center">
-            <p className="mx-auto max-w-md text-sm text-cs-text-muted">
-              {t("empty")}
-            </p>
-          </FadeIn>
-        ) : (
-          <div className="mt-16">
-            <MenuMosaic items={items} locale={locale} />
-          </div>
-        )}
-      </div>
-    </section>
+    <MenuPageBody
+      locale={params.locale as Locale}
+      initialCategory={params.category as CategoryKey}
+    />
   );
 }
