@@ -136,7 +136,21 @@
   },
   "menu": {
     "heading": { "plain": "THE", "pill": "MENU" },
-    "subhead": "Every Chahine Seafood dish, organised into the categories you'll recognise from any of our branches."
+    "subhead": "Every Chahine Seafood dish, organised into the categories you'll recognise from any of our branches.",
+    "rail": {
+      "hint": "Every dish on a single page. Use the rail to jump between sections, or scroll through the whole house — sandwiches, burgers, platters, family meals, and the rest. Tap any name for the dish detail and a one-tap order to your nearest branch on WhatsApp."
+    },
+    "section": {
+      "countLabel": "{count, plural, one {# item} other {# items}}",
+      "itemsLabel": "items",
+      "empty": "Items coming soon."
+    },
+    "signature": {
+      "label": "Signature"
+    },
+    "photo": {
+      "show": "Show photo"
+    }
   },
   "menuCategory": {
     "heading": { "plain": "FROM" },
