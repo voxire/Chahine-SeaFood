@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/lib/i18n/navigation";
+import { VoxireCredit } from "@/components/VoxireCredit";
 
 export async function Footer() {
   const t = await getTranslations("footer");
@@ -51,6 +52,7 @@ export async function Footer() {
           © {year} Chahine Seafood. {t("copyright")}
         </p>
       </div>
+      <VoxireCredit />
     </footer>
   );
 }
