@@ -63,6 +63,7 @@ export function VoxireCredit() {
       >
         {/* Logo + location */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://voxire.com/assets/images/Voxire-logo-enblm-m.png"
             alt="Voxire"
@@ -151,6 +152,7 @@ export function VoxireCredit() {
         }}
       >
         {/* Logo */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://voxire.com/assets/images/Voxire-logo-enblm-m.png"
           alt="Voxire"
